@@ -18,21 +18,25 @@
 import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
-import { rollupsUrl } from 'api'
+import * as apiClient from './apiClient'
 
 class GradebookLayout extends React.Component {
-
-  componentDidMount() {
-    this.loadRollups()
+  constructor(props) {
+    super(props)
+    this.state = {
+      loadedOutcomes: false // TODO: render loader when no outcomes
+    }
   }
 
-  loadRollups = (page = 1) => {
-    const exclude = ''
-    const course = ENV.context_asset_string.split('_')[1]
-    const url = rollupsUrl(course, exclude, page)
-    axios.get(
-      url
-    ).then((response) => console.log(response))
+  async componentDidMount() {
+    apiClient.loadRollups().then(([outcomes, students, paths]) => {
+      this.setState({
+        loadedOutcomes: true,
+        outcomes,
+        students,
+        paths
+      })
+    })
   }
 
   render() {
