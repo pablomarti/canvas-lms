@@ -19,6 +19,7 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
+import LearningMasteryGradebook from './LearningMasteryGradebook'
 
 class GradebookLayout extends React.Component {
   constructor(props) {
@@ -40,7 +41,15 @@ class GradebookLayout extends React.Component {
   }
 
   render() {
-    return <div> Hello World! </div>
+    const {outcomes, loadedOutcomes, students} = this.state
+    if (!loadedOutcomes) {
+      return ''
+    }
+    return (
+      <div>
+        <LearningMasteryGradebook students={students} />
+      </div>
+    )
   }
 }
 
