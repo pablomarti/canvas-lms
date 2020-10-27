@@ -17,7 +17,7 @@
  */
 
 import React from 'react'
-//import {PieChart} from 'react-minimal-pie-chart'
+// import {PieChart} from 'react-minimal-pie-chart'
 
 export default ({ratings, average}) => {
   const envRatings = ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings
