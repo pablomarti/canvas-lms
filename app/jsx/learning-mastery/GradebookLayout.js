@@ -21,6 +21,7 @@ import React from 'react'
 import * as apiClient from './apiClient'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
 import Paginator from '../shared/components/Paginator'
+import ProficiencyFilter from './ProficiencyFilter'
 
 class GradebookLayout extends React.Component {
   constructor(props) {
@@ -30,7 +31,8 @@ class GradebookLayout extends React.Component {
       page: 0,
       pageCount: 10,
       sortAsc: true,
-      sortField: ''
+      sortField: '',
+      ratings: ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings
     }
   }
 
@@ -75,6 +77,7 @@ class GradebookLayout extends React.Component {
     }
     return (
       <div>
+        <ProficiencyFilter ratings={this.state.ratings} />
         <LearningMasteryGradebook
           students={students}
           outcomes={outcomes}
