@@ -26,13 +26,20 @@ import ProficiencyFilter from './ProficiencyFilter'
 class GradebookLayout extends React.Component {
   constructor(props) {
     super(props)
+
+    const ratings = [...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
+                        { points: null, mastery: false, description: 'Not Assessed' }
+    ].map((r, i) =>
+      ({...r, checked: true, onClick: () => this.changeFilter(i)})
+    )
+
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
       page: 0,
       pageCount: 10,
       sortAsc: true,
       sortField: '',
-      ratings: ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings
+      ratings: ratings
     }
   }
 
@@ -68,6 +75,14 @@ class GradebookLayout extends React.Component {
         this.loadPage(1, sortField, sortAsc)
       }
     )
+  }
+
+  changeFilter(i) {
+    const tmpRatings = this.state.ratings;
+    tmpRatings[i].checked = !tmpRatings[i].checked
+    this.setState({
+      ratings: tmpRatings
+    })
   }
 
   render() {
