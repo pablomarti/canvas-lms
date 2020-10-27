@@ -39,7 +39,7 @@ class GradebookLayout extends React.Component {
       pageCount: 10,
       sortAsc: true,
       sortField: '',
-      ratings: ratings
+      ratings: ratings,
     }
   }
 
@@ -90,6 +90,7 @@ class GradebookLayout extends React.Component {
     if (!loadedOutcomes) {
       return ''
     }
+
     return (
       <div>
         <ProficiencyFilter ratings={this.state.ratings} />
