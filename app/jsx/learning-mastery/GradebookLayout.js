@@ -19,12 +19,14 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
+import ProficiencyFilter from './ProficiencyFilter'
 
 class GradebookLayout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loadedOutcomes: false // TODO: render loader when no outcomes
+      loadedOutcomes: false, // TODO: render loader when no outcomes
+      ratings: ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings
     }
   }
 
@@ -40,7 +42,11 @@ class GradebookLayout extends React.Component {
   }
 
   render() {
-    return <div> Hello World! </div>
+    return (
+      <div>
+        <ProficiencyFilter ratings={this.state.ratings} />
+      </div>
+    )
   }
 }
 
