@@ -26,15 +26,14 @@ class GradebookLayout extends React.Component {
   constructor(props) {
     super(props)
 
-    const ratings = [...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
-                        { points: null, mastery: false, description: 'Not Assessed' }
-    ].map((r, i) => 
-      ({...r, checked: true, onClick: () => this.changeFilter(i)})
-    )
+    const ratings = [
+      ...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
+      {points: null, mastery: false, description: 'Not Assessed'}
+    ].map((r, i) => ({...r, checked: true, onClick: () => this.changeFilter(i)}))
 
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
-      ratings: ratings
+      ratings
     }
   }
 
@@ -50,7 +49,7 @@ class GradebookLayout extends React.Component {
   }
 
   changeFilter(i) {
-    const tmpRatings = this.state.ratings;
+    const tmpRatings = this.state.ratings
     tmpRatings[i].checked = !tmpRatings[i].checked
     this.setState({
       ratings: tmpRatings
