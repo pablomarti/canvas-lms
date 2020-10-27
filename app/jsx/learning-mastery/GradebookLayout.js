@@ -39,7 +39,7 @@ class GradebookLayout extends React.Component {
       pageCount: 10,
       sortAsc: true,
       sortField: '',
-      ratings: ratings,
+      ratings: ratings
     }
   }
 
@@ -75,6 +75,14 @@ class GradebookLayout extends React.Component {
         this.loadPage(1, sortField, sortAsc)
       }
     )
+  }
+
+  changeFilter(i) {
+    const tmpRatings = this.state.ratings;
+    tmpRatings[i].checked = !tmpRatings[i].checked
+    this.setState({
+      ratings: tmpRatings
+    })
   }
 
   changeFilter(i) {

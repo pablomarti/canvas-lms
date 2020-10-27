@@ -27,7 +27,7 @@ function renderProficiencies(rating, icon) {
       className={`outcome-proficiency-pill ${rating.checked ? 'checked' : ''}`}
       onClick={e => rating.onClick(e)}
     >
-      <div className="outcome-proficiency-dot" style={{backgroundColor: ("#" + rating.color)}}>
+      <div className="outcome-proficiency-dot" style={{backgroundColor: '#' + rating.color}}>
         <div className={icon} />
       </div>
       <div className="outcome-proficiency-description">{rating.description}</div>
@@ -38,10 +38,6 @@ function renderProficiencies(rating, icon) {
 function renderPills(ratings) {
   const masteryRating = ratings.find(rating => !!rating.mastery)
   const masteryAt = masteryRating.points
-  ratings = [
-    ...ratings,
-    {points: null, mastery: false, description: 'Not Assessed', checked: true, onClick: () => {}} // TODO: Not functional
-  ]
   return ratings.map(rating => renderProficiencies(rating, getIconClass(rating.points, masteryAt)))
 }
 
