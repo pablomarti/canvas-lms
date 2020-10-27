@@ -85,7 +85,7 @@ class GradebookLayout extends React.Component {
   }
 
   changeFilter(i) {
-    const tmpRatings = this.state.ratings
+    const tmpRatings = [...this.state.ratings]
     tmpRatings[i].checked = !tmpRatings[i].checked
     this.setState({
       ratings: tmpRatings
