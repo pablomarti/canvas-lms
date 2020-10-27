@@ -20,12 +20,20 @@ import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
+import ProficiencyFilter from './ProficiencyFilter'
 
 class GradebookLayout extends React.Component {
   constructor(props) {
     super(props)
+
+    const ratings = [
+      ...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
+      {points: null, mastery: false, description: 'Not Assessed'}
+    ].map((r, i) => ({...r, checked: true, onClick: () => this.changeFilter(i)}))
+
     this.state = {
-      loadedOutcomes: false // TODO: render loader when no outcomes
+      loadedOutcomes: false, // TODO: render loader when no outcomes
+      ratings
     }
   }
 
@@ -40,13 +48,23 @@ class GradebookLayout extends React.Component {
     })
   }
 
+  changeFilter(i) {
+    const tmpRatings = [...this.state.ratings]
+    tmpRatings[i].checked = !tmpRatings[i].checked
+    this.setState({
+      ratings: tmpRatings
+    })
+  }
+
   render() {
     const {outcomes, loadedOutcomes, students} = this.state
     if (!loadedOutcomes) {
       return ''
     }
+
     return (
       <div>
+        <ProficiencyFilter ratings={this.state.ratings} />
         <LearningMasteryGradebook students={students} />
       </div>
     )
