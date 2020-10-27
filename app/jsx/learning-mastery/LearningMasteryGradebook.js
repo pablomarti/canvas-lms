@@ -23,6 +23,8 @@ import {Flex} from '@instructure/ui-flex'
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
+    this.header = React.createRef()
+    this.scores = React.createRef()
   }
 
   static defaultProps = {
@@ -48,54 +50,100 @@ class LearningMasteryGradebook extends React.Component {
   renderOutcomeRow = () => {
     const {outcomes} = this.props
     return (
-      <div style={{paddingLeft: '15%'}}>
-        <Flex direction="row" withVisualDebug>
+      <Flex direction="row" withVisualDebug padding="0 0 large 0" width="600px">
+        <div id="stuck-header">
           {outcomes.map(outcome => {
             return (
-              <Flex.Item size="200px" shouldGrow shouldShrink padding="small">
+              <Flex.Item size="200px" shouldGrow padding="small large small large">
                 {this.renderOutcomeHeader(outcome)}
               </Flex.Item>
             )
           })}
-        </Flex>
-      </div>
+        </div>
+      </Flex>
     )
   }
 
   renderScore = () => {
-    return '5/3'
+    return <div className="score">5/3</div>
+  }
+
+  renderStudentScores = () => {
+    const {outcomes} = this.props
+    const scores = outcomes.map(outcome => {
+      return (
+        <Flex.Item size="200px">
+          <div className="cell">{this.renderScore()}</div>
+        </Flex.Item>
+      )
+    })
+    return <Flex direction="row">{scores}</Flex>
   }
 
   renderScores = () => {
     const {students, outcomes} = this.props
+    const scores = students.map(student => {
+      return this.renderStudentScores()
+    })
+    return (
+      <Flex direction="column" withVisualDebug>
+        {scores}
+      </Flex>
+    )
+  }
+
+  renderStudent = () => {
+    const {students, outcomes} = this.props
     return students.map(student => {
       return (
-        <Flex direction="row" withVisualDebug>
-          <Flex.Item withVisualDebug size="15%">
-            {student.name}
-          </Flex.Item>
-          {outcomes.map(outcome => {
-            return (
-              <Flex.Item size="200px" shouldGrow shouldShrink padding="small">
-                <div style={{textAlign: 'center'}}>{this.renderScore()}</div>
-              </Flex.Item>
-            )
-          })}
-        </Flex>
+        <div className="cell">
+          <div className="name">{student.name}</div>
+        </div>
       )
     })
+  }
+
+  handleScrollCells = e => {
+    $('#stuck-header')[0].scrollLeft = e.target.scrollLeft
+    $('#user-list')[0].scrollTop = e.target.scrollTop
+  }
+
+  handleOutcomeScroll = e => {
+    $('#scores')[0].scrollLeft = e.target.scrollLeft
+  }
+
+  handleStudentScroll = e => {
+    $('#scores')[0].scrollTop = e.target.scrollTop
   }
 
   renderGradebook = () => {
     const {outcomes, students} = this.props
     return (
-      <Flex width="90%" direction="row" withVisualDebug>
-        <Flex.Item shouldShrink shouldGrow overflowX="auto" padding="medium" withVisualDebug>
-          {this.renderOutcomeRow()}
-          {this.renderHeaderRow()}
-          {this.renderScores()}
-        </Flex.Item>
-      </Flex>
+      <>
+        <div className="header">
+          <Flex height="50px" direction="column">
+            <Flex.Item
+              as="header"
+              refs={this.header}
+              id="outcome-header"
+              size="35px"
+              overflowX="hidden"
+              overflowY="hidden"
+              onScroll={this.handleOutcomeScroll}
+            >
+              {this.renderOutcomeRow()}
+            </Flex.Item>
+          </Flex>
+        </div>
+        <div className="wrapper">
+          <div className="nav" id="user-list" onScroll={this.handleStudentScroll}>
+            {this.renderStudent()}
+          </div>
+          <div className="mainWrapper" id="scores" onScroll={this.handleScrollCells}>
+            {this.renderScores()}
+          </div>
+        </div>
+      </>
     )
   }
 
@@ -105,7 +153,6 @@ class LearningMasteryGradebook extends React.Component {
         <Flex.Item shouldGrow padding="medium">
           {I18n.t('Students')}
         </Flex.Item>
-        {/* TODO: Render outcome averages */}
       </Flex>
     )
   }

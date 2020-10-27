@@ -85,12 +85,12 @@ $page-dark: #ebeff2;
 
 /* layout */
 .outcome-gradebook {
-  background: $page-light;
-  border-top: 1px solid $border-dark;
-  box-sizing: border-box;
-  color: $font-color;
-  box-sizing: border-box;
-  padding-#{direction(left)}: 22px;
+  // background: $page-light;
+  // border-top: 1px solid $border-dark;
+  // box-sizing: border-box;
+  // color: $font-color;
+  // box-sizing: border-box;
+  // padding-#{direction(left)}: 22px;
 }
 
 .outcome-gradebook-wrapper {
