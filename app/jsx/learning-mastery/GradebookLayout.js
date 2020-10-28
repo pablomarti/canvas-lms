@@ -18,7 +18,6 @@
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
-import _ from 'underscore'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
 import ProficiencyFilter from './ProficiencyFilter'
 import Rollups from './Rollups'
