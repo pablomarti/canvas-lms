@@ -19,6 +19,7 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
+import {getIconClass} from '../outcomes/ColumnTooltip'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
@@ -79,9 +80,19 @@ class LearningMasteryGradebook extends React.Component {
 
   renderScore = (student, outcome, rollups) => {
     const rollup = rollups.find(r => r.student === student)
-    const selected_rollup = rollup['outcome_' + outcome.id]
+    const score = rollup['outcome_' + outcome.id].score
+    const icon = getIconClass(score, outcome.mastery_points)
+    const ratings = outcome.ratings
 
-    return selected_rollup.score + '/' + outcome.mastery_points
+    const rating = ratings.find((r, i) => {
+      return i + 1 == ratings.length || r.points == score || (r.points < score && ratings[i + 1].points > score)
+    })
+
+    return (
+      <div className="outcome-proficiency-dot" style={{backgroundColor: '#' + rating.color}}>
+        <div className={icon} />
+      </div>
+    )
   }
 
   renderStudent = () => {
