@@ -77,7 +77,7 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  renderStudentScores = (student) => {
+  renderStudentScores = student => {
     const {outcomes} = this.props
     const scores = outcomes.map(outcome => {
       return (
