@@ -28,19 +28,9 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   static defaultProps = {
-    outcomes: [
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2'
-    ],
-    students: []
+    outcomes: [],
+    students: [],
+    rollups: []
   }
 
   renderOutcomeHeader = outcome => {
@@ -55,7 +45,7 @@ class LearningMasteryGradebook extends React.Component {
           {outcomes.map(outcome => {
             return (
               <Flex.Item size="200px" shouldGrow padding="small large small large">
-                {this.renderOutcomeHeader(outcome)}
+                {this.renderOutcomeHeader(outcome.title)}
               </Flex.Item>
             )
           })}
@@ -64,26 +54,10 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  renderScore = () => {
-    return <div className="score">5/3</div>
-  }
-
-  renderStudentScores = () => {
-    const {outcomes} = this.props
-    const scores = outcomes.map(outcome => {
-      return (
-        <Flex.Item size="200px">
-          <div className="cell">{this.renderScore()}</div>
-        </Flex.Item>
-      )
-    })
-    return <Flex direction="row">{scores}</Flex>
-  }
-
   renderScores = () => {
-    const {students, outcomes} = this.props
+    const {students, outcomes, rollups} = this.props
     const scores = students.map(student => {
-      return this.renderStudentScores()
+      return this.renderStudentScores(student, outcomes, rollups)
     })
     return (
       <Flex direction="column" withVisualDebug>
@@ -92,8 +66,26 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
+  renderStudentScores = (student, outcomes, rollups) => {
+    const scores = outcomes.map(outcome => {
+      return (
+        <Flex.Item size="200px">
+          <div className="cell">{this.renderScore(student, outcome, rollups)}</div>
+        </Flex.Item>
+      )
+    })
+    return <Flex direction="row">{scores}</Flex>
+  }
+
+  renderScore = (student, outcome, rollups) => {
+    const rollup = rollups.find(r => r.student === student)
+    const selected_rollup = rollup['outcome_' + outcome.id]
+    
+    return selected_rollup.score + '/' + outcome.mastery_points
+  }
+
   renderStudent = () => {
-    const {students, outcomes} = this.props
+    const students = this.props.students
     return students.map(student => {
       return (
         <div className="cell">
@@ -117,7 +109,6 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderGradebook = () => {
-    const {outcomes, students} = this.props
     return (
       <>
         <div className="header">

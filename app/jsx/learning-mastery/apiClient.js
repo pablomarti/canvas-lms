@@ -32,6 +32,7 @@ export const loadRollups = (page = 1) => {
     const outcomes = data.linked.outcomes
     const students = data.linked.users
     const outcomePaths = data.linked.outcome_paths
-    return [outcomes, students, outcomePaths]
+    const rollups = data.rollups
+    return [outcomes, students, outcomePaths, rollups]
   })
 }
