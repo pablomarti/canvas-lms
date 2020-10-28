@@ -19,12 +19,17 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
+import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
+import OutcomeHeader from './OutcomeHeader'
+import $ from 'jquery'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
-    this.header = React.createRef()
-    this.scores = React.createRef()
+
+    this.state = {
+      expandedOutcomes: {}
+    }
   }
 
   static defaultProps = {
@@ -43,8 +48,9 @@ class LearningMasteryGradebook extends React.Component {
     students: []
   }
 
-  renderOutcomeHeader = outcome => {
-    return <div style={{textAlign: 'center'}}>{outcome}</div>
+  handleExpandedOutcome = (outcomeId, expanded) => {
+    console.log(outcomeId)
+    console.log(expanded)
   }
 
   renderOutcomeRow = () => {
@@ -52,12 +58,30 @@ class LearningMasteryGradebook extends React.Component {
     return (
       <Flex direction="row" withVisualDebug padding="0 0 large 0" width="600px">
         <div id="stuck-header">
-          {outcomes.map(outcome => {
-            return (
-              <Flex.Item size="200px" shouldGrow padding="small large small large">
-                {this.renderOutcomeHeader(outcome)}
-              </Flex.Item>
-            )
+          {outcomes.map((outcome, index) => {
+            if (index == 1) {
+              // TODO: remove. we need to read the 'expandedOutcomes' from state here
+              return (
+                <>
+                  <Flex.Item size="300px">
+                    <div className="cell header-cell">
+                      <OutcomeHeader
+                        onExpandOutcome={this.handleExpandedOutcome}
+                        outcome={outcome}
+                      />
+                    </div>
+                  </Flex.Item>
+                </>
+              )
+            } else {
+              return (
+                <Flex.Item size="200px">
+                  <div className="cell header-cell">
+                    <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
+                  </div>
+                </Flex.Item>
+              )
+            }
           })}
         </div>
       </Flex>
@@ -70,12 +94,28 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudentScores = () => {
     const {outcomes} = this.props
-    const scores = outcomes.map(outcome => {
-      return (
-        <Flex.Item size="200px">
-          <div className="cell">{this.renderScore()}</div>
-        </Flex.Item>
-      )
+    const scores = outcomes.map((outcome, index) => {
+      if (index == 1) {
+        return (
+          <>
+            <Flex.Item size="100px">
+              <div className="cell">{this.renderScore()}</div>
+            </Flex.Item>
+            <Flex.Item size="100px">
+              <div className="cell">small</div>
+            </Flex.Item>
+            <Flex.Item size="100px">
+              <div className="cell">small</div>
+            </Flex.Item>
+          </>
+        )
+      } else {
+        return (
+          <Flex.Item size="200px">
+            <div className="cell">{this.renderScore()}</div>
+          </Flex.Item>
+        )
+      }
     })
     return <Flex direction="row">{scores}</Flex>
   }
@@ -105,11 +145,19 @@ class LearningMasteryGradebook extends React.Component {
 
   handleScrollCells = e => {
     $('#stuck-header')[0].scrollLeft = e.target.scrollLeft
+    $('#averages-row')[0].scrollLeft = e.target.scrollLeft
+
     $('#user-list')[0].scrollTop = e.target.scrollTop
   }
 
   handleOutcomeScroll = e => {
     $('#scores')[0].scrollLeft = e.target.scrollLeft
+    $('#averages-row')[0].scrollLeft = e.target.scrollLeft
+  }
+
+  handleAverageScroll = e => {
+    $('#scores')[0].scrollLeft = e.target.scrollLeft
+    $('#stuck-header')[0].scrollLeft = e.target.scrollLeft
   }
 
   handleStudentScroll = e => {
@@ -120,13 +168,11 @@ class LearningMasteryGradebook extends React.Component {
     const {outcomes, students} = this.props
     return (
       <>
-        <div className="header">
-          <Flex height="50px" direction="column">
+        <div className="table-header-row">
+          <Flex height="40px" direction="column">
             <Flex.Item
               as="header"
-              refs={this.header}
-              id="outcome-header"
-              size="35px"
+              size="40px"
               overflowX="hidden"
               overflowY="hidden"
               onScroll={this.handleOutcomeScroll}
@@ -134,6 +180,9 @@ class LearningMasteryGradebook extends React.Component {
               {this.renderOutcomeRow()}
             </Flex.Item>
           </Flex>
+          <div style={{height: '40px', width: '600px', overflow: 'hidden'}}>
+            {this.renderHeaderRow()}
+          </div>
         </div>
         <div className="wrapper">
           <div className="nav" id="user-list" onScroll={this.handleStudentScroll}>
@@ -148,11 +197,22 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderHeaderRow = () => {
+    const {outcomes, students} = this.props
+
     return (
-      <Flex height="90%" width="100%" direction="column" withVisualDebug>
-        <Flex.Item shouldGrow padding="medium">
-          {I18n.t('Students')}
-        </Flex.Item>
+      <Flex direction="row" withVisualDebug width="600px">
+        <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
+          {outcomes.map(outcome => {
+            return (
+              <Flex.Item size="200px">
+                <div className="cell header-cell">
+                  <div className="outcome-column-header">{outcome}</div>{' '}
+                  {/* TODO: Replace with averages */}
+                </div>
+              </Flex.Item>
+            )
+          })}
+        </div>
       </Flex>
     )
   }
