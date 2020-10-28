@@ -23,6 +23,80 @@ a#accessibility_warning {
   @include fontSize(14px);
 }
 
+.row {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #BDBDBD;
+}
+
+.header {
+  padding-left: 100px;
+}
+
+.cell {
+  height: 40px;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #BDBDBD;
+  border-right: 1px solid #BDBDBD;
+}
+
+.name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.score {
+  padding: 0.75rem 1.5rem;
+}
+
+.wrapper {
+  font: 15px 'Helvetica', sans-serif;
+  display: flex;
+}
+
+.nav {
+  height: 600px;
+  box-sizing: border-box;
+  min-width: 100px;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.mainWrapper {
+  width: 600px;
+  overflow: scroll;
+  background: #f0f0f0;
+  height: 600px;
+}
+
+#stuck-header {
+  display: flex;
+  overflow-x: auto;
+  height: 35px;
+  padding-bottom: 35px;
+  overflow-y: hidden;
+}
+
+.sticky-column {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  align-self: flex-start; /* <-- this is the fix */
+  background-color: red;  /* Not necessary -- for example only */
+}
+
+
 #footer {
   display: none;
 }
