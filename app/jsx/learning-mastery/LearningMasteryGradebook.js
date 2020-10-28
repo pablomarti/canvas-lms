@@ -85,7 +85,11 @@ class LearningMasteryGradebook extends React.Component {
     const ratings = outcome.ratings
 
     const rating = ratings.find((r, i) => {
-      return i + 1 == ratings.length || r.points == score || (r.points < score && ratings[i + 1].points > score)
+      return (
+        r.points == score ||
+        (i == 0 && r.points < score) ||
+        (r.points < score && ratings[i - 1].points > score)
+      )
     })
 
     return (
