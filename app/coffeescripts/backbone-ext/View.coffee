@@ -141,8 +141,8 @@ class Backbone.View extends Backbone.View
   # @api public
 
   render: =>
-    @renderEl()
-    @_afterRender()
+    # @renderEl()
+    # @_afterRender()
     this
 
   ##
@@ -151,7 +151,8 @@ class Backbone.View extends Backbone.View
   # @api public
 
   renderEl: ->
-    @$el.html @template(@toJSON()) if @template
+    console.log(@$el)
+    # @$el.html @template(@toJSON()) if @template
 
   ##
   # Caches elements from `els` config

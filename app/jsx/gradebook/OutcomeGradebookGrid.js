@@ -452,6 +452,7 @@ const Grid = {
       return $(node).append(view.$el)
     },
     headerCell({node, column, grid}, _fn = Grid.averageFn) {
+      console.log('??')
       if (column.field === 'student') {
         return
       }
@@ -461,7 +462,8 @@ const Grid = {
         attributes: column.outcome,
         totalsFn
       })
-      return view.render()
+      console.log(view)
+      // return view.render()
     },
     calculateRatingsTotals(grid, column) {
       const results = Grid.View.getColumnResults(grid.getData(), column)

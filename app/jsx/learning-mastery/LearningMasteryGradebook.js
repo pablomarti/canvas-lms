@@ -25,6 +25,9 @@ import OutcomeAverageCell from './OutcomeAverageCell'
 import $ from 'jquery'
 import {truncate} from 'lodash'
 import {getIconClass} from '../outcomes/ColumnTooltip'
+import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
+import OutcomeHeader from './OutcomeHeader'
+import $ from 'jquery'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
@@ -33,13 +36,6 @@ class LearningMasteryGradebook extends React.Component {
     this.state = {
       expandedOutcomes: {}
     }
-  }
-
-  toggleSort = newSortField => {
-    const {sortField, sortAsc, setSortOrder} = this.props
-    sortField === newSortField
-      ? setSortOrder(sortField, !sortAsc)
-      : setSortOrder(newSortField, true)
   }
 
   static defaultProps = {
@@ -94,12 +90,28 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudentScores = student => {
     const {outcomes} = this.props
-    const scores = outcomes.map(outcome => {
-      return (
-        <Flex.Item size="200px">
-          <div className="cell">{this.renderScore(student, outcome)}</div>
-        </Flex.Item>
-      )
+    const scores = outcomes.map((outcome, index) => {
+      if (index == 1) {
+        return (
+          <>
+            <Flex.Item size="100px">
+              <div className="cell">{this.renderScore()}</div>
+            </Flex.Item>
+            <Flex.Item size="100px">
+              <div className="cell">small</div>
+            </Flex.Item>
+            <Flex.Item size="100px">
+              <div className="cell">small</div>
+            </Flex.Item>
+          </>
+        )
+      } else {
+        return (
+          <Flex.Item size="200px">
+            <div className="cell">{this.renderScore()}</div>
+          </Flex.Item>
+        )
+      }
     })
     return <Flex direction="row">{scores}</Flex>
   }
