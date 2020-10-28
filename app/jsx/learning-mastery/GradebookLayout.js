@@ -42,7 +42,7 @@ class GradebookLayout extends React.Component {
     apiClient.loadRollups().then(([outcomes, students, paths, rollups]) => {
       this.setState({
         loadedOutcomes: true,
-        rollups: Rollups(rollups, students),
+        rollups: Rollups(rollups, students, outcomes),
         outcomes,
         students,
         paths
@@ -51,10 +51,23 @@ class GradebookLayout extends React.Component {
   }
 
   changeFilter(i) {
-    const tmpRatings = [...this.state.ratings]
-    tmpRatings[i].checked = !tmpRatings[i].checked
+    const outcomes = this.state.outcomes
+    const ratings = [...this.state.ratings]
+    const rollups = [...this.state.rollups]
+
+    ratings[i].checked = !ratings[i].checked
+
+    rollups.forEach(r => {
+      outcomes.forEach(o => {
+        if(r['outcome_' + o.id].rating.points === ratings[i].points) {
+          r['outcome_' + o.id].checked = ratings[i].checked
+        }
+      })
+    })
+  
     this.setState({
-      ratings: tmpRatings
+      ratings,
+      rollups
     })
   }
 

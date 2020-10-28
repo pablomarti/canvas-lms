@@ -58,20 +58,11 @@ class LearningMasteryGradebook extends React.Component {
   renderScore = (student, outcome) => {
     const rollups = this.props.rollups
     const rollup = rollups.find(r => r.student === student)
-    const score = rollup['outcome_' + outcome.id].score
-    const icon = getIconClass(score, outcome.mastery_points)
-    const ratings = outcome.ratings
-
-    const rating = ratings.find((r, i) => {
-      return (
-        r.points == score ||
-        (i == 0 && r.points < score) ||
-        (r.points < score && ratings[i - 1].points > score)
-      )
-    })
+    const outcome_rollup = rollup['outcome_' + outcome.id]
+    const icon = getIconClass(outcome_rollup.rating.points, outcome.mastery_points)
 
     return (
-      <div className="outcome-proficiency-dot" style={{backgroundColor: '#' + rating.color}}>
+      <div className="outcome-proficiency-dot" style={{backgroundColor: '#' + outcome_rollup.rating.color, opacity: (outcome_rollup.checked ? 1 : 0.3)}}>
         <div className={icon} />
       </div>
     )

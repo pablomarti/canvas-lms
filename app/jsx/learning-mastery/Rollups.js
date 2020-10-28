@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function loadRow(rollups_group, students) {
+function loadRow(rollups_group, students, outcomes) {
   const rollup = rollups_group[0]
 
   const user = rollup.links.user
@@ -24,13 +24,26 @@ function loadRow(rollups_group, students) {
   const row = {student}
 
   rollup.scores.forEach(
-    s => (row[`outcome_${s.links.outcome}`] = {score: s.score, hide_points: s.hide_points})
+    s => {
+      const score = s.score
+      const outcome = outcomes.find(o => o.id === s.links.outcome)
+      const ratings = outcome.ratings
+      const rating = ratings.find((r, i) => {
+        return (
+          r.points == score ||
+          (i == 0 && r.points < score) ||
+          (r.points < score && ratings[i - 1].points > score)
+        )
+      })
+
+      row[`outcome_${outcome.id}`] = {score: s.score, hide_points: s.hide_points, rating: rating, checked: true}
+    }
   )
 
   return row
 }
 
-export default function Rollups(rollups, students) {
+export default function Rollups(rollups, students, outcomes) {
   const user_ids = [...new Set(rollups.map(r => r.links.user))]
 
   const filtered_rollups = rollups.reduce((r, a) => {
@@ -40,5 +53,5 @@ export default function Rollups(rollups, students) {
 
   const ordered_rollups = user_ids.map(u => filtered_rollups[u])
 
-  return ordered_rollups.map(r => loadRow(r, students)).filter(r => r !== null)
+  return ordered_rollups.map(r => loadRow(r, students, outcomes)).filter(r => r !== null)
 }
