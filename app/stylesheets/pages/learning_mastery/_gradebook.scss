@@ -23,14 +23,60 @@ a#accessibility_warning {
   @include fontSize(14px);
 }
 
+.header-cell {
+  position: relative;
+}
+
+.flex-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 40px;
+  width: 600px;
+  overflow-x: scroll;
+}
+
+.sticky-header {
+  display: flex;
+  width: 100%;
+  padding-bottom: 40px;
+  overflow-y: hidden;
+}
+
+.outcome-column-header {
+  font-size: 12px;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  right: 0;
+  left: 0;
+  color: #008EE2;
+}
+
+.average-row {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  height: 40px;
+  width: 600px;
+}
+
+.outcome-header-arrow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
 .row {
   padding-top: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid #BDBDBD;
 }
 
-.header {
-  padding-left: 100px;
+.table-header-row {
+  padding-left: 135px;
+  border-bottom: 1px solid #BDBDBD;
+
 }
 
 .cell {
@@ -52,7 +98,14 @@ a#accessibility_warning {
 }
 
 .score {
-  padding: 0.75rem 1.5rem;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .wrapper {
@@ -63,7 +116,7 @@ a#accessibility_warning {
 .nav {
   height: 600px;
   box-sizing: border-box;
-  min-width: 100px;
+  min-width: 135px;
   overflow-y: scroll;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -76,15 +129,14 @@ a#accessibility_warning {
 .mainWrapper {
   width: 600px;
   overflow: scroll;
-  background: #f0f0f0;
+  // background: #f0f0f0;
   height: 600px;
 }
 
 #stuck-header {
   display: flex;
-  overflow-x: auto;
-  height: 35px;
-  padding-bottom: 35px;
+  width: 100%;
+  padding-bottom: 40px;
   overflow-y: hidden;
 }
 
