@@ -59,12 +59,12 @@ class GradebookLayout extends React.Component {
 
     rollups.forEach(r => {
       outcomes.forEach(o => {
-        if(r['outcome_' + o.id].rating.points === ratings[i].points) {
+        if (r['outcome_' + o.id].rating.points === ratings[i].points) {
           r['outcome_' + o.id].checked = ratings[i].checked
         }
       })
     })
-  
+
     this.setState({
       ratings,
       rollups

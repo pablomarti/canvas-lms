@@ -23,22 +23,25 @@ function loadRow(rollups_group, students, outcomes) {
   const student = students.find(s => s.id === user)
   const row = {student}
 
-  rollup.scores.forEach(
-    s => {
-      const score = s.score
-      const outcome = outcomes.find(o => o.id === s.links.outcome)
-      const ratings = outcome.ratings
-      const rating = ratings.find((r, i) => {
-        return (
-          r.points == score ||
-          (i == 0 && r.points < score) ||
-          (r.points < score && ratings[i - 1].points > score)
-        )
-      })
+  rollup.scores.forEach(s => {
+    const score = s.score
+    const outcome = outcomes.find(o => o.id === s.links.outcome)
+    const ratings = outcome.ratings
+    const rating = ratings.find((r, i) => {
+      return (
+        r.points == score ||
+        (i == 0 && r.points < score) ||
+        (r.points < score && ratings[i - 1].points > score)
+      )
+    })
 
-      row[`outcome_${outcome.id}`] = {score: s.score, hide_points: s.hide_points, rating: rating, checked: true}
+    row[`outcome_${outcome.id}`] = {
+      score: s.score,
+      hide_points: s.hide_points,
+      rating,
+      checked: true
     }
-  )
+  })
 
   return row
 }

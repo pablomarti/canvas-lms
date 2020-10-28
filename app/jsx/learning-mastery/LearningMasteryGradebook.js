@@ -62,7 +62,13 @@ class LearningMasteryGradebook extends React.Component {
     const icon = getIconClass(outcome_rollup.rating.points, outcome.mastery_points)
 
     return (
-      <div className="outcome-proficiency-dot" style={{backgroundColor: '#' + outcome_rollup.rating.color, opacity: (outcome_rollup.checked ? 1 : 0.3)}}>
+      <div
+        className="outcome-proficiency-dot"
+        style={{
+          backgroundColor: '#' + outcome_rollup.rating.color,
+          opacity: outcome_rollup.checked ? 1 : 0.3
+        }}
+      >
         <div className={icon} />
       </div>
     )
