@@ -80,7 +80,7 @@ class LearningMasteryGradebook extends React.Component {
   renderScore = (student, outcome, rollups) => {
     const rollup = rollups.find(r => r.student === student)
     const selected_rollup = rollup['outcome_' + outcome.id]
-    
+
     return selected_rollup.score + '/' + outcome.mastery_points
   }
 
