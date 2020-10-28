@@ -101,6 +101,18 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudent = () => {
     const {students, outcomes} = this.props
+    const scores = students.map(student => {
+      return this.renderStudentScores()
+    })
+    return (
+      <Flex direction="column" withVisualDebug>
+        {scores}
+      </Flex>
+    )
+  }
+
+  renderStudent = () => {
+    const {students, outcomes} = this.props
     return students.map(student => {
       return (
         <div className="cell">

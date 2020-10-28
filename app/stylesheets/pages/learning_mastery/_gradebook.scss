@@ -23,6 +23,7 @@ a#accessibility_warning {
   @include fontSize(14px);
 }
 
+<<<<<<< HEAD
 .box {
   border-radius: 3px;
   box-sizing: border-box;
@@ -78,12 +79,20 @@ a#accessibility_warning {
   bottom: 0;
 }
 
+=======
+>>>>>>> Working scroll + grid (#3)
 .row {
   padding-top: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid #BDBDBD;
 }
 
+<<<<<<< HEAD
+=======
+.header {
+  padding-left: 100px;
+}
+>>>>>>> Working scroll + grid (#3)
 
 .cell {
   height: 40px;
