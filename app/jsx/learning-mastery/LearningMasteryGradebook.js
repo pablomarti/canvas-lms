@@ -56,7 +56,7 @@ class LearningMasteryGradebook extends React.Component {
     rollups: []
   }
 
-  handleExpandedOutcome = (outcomeId) => {
+  handleExpandedOutcome = outcomeId => {
     const outcomes = [...this.props.outcomes]
     const outcome = outcomes.find(o => o.id == outcomeId)
     outcome.expanded = !outcome.expanded
@@ -75,10 +75,10 @@ class LearningMasteryGradebook extends React.Component {
     return (
       <Flex direction="row">
         <div className="sticky-header" id="stuck-header">
-          {outcomes.map((outcome, index) => {
+          {outcomes.map(outcome => {
             if (outcome.expanded) {
               const alignments = this.outcomeAlignments(outcome.id)
-              const size = 200 + (100 * alignments.length);
+              const size = 200 + 100 * alignments.length
               return (
                 <Flex.Item size={size + 'px'}>
                   <div className="cell header-cell">
@@ -121,13 +121,24 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudentScores = student => {
     const {outcomes} = this.props
-    const scores = outcomes.map((outcome) => {
+    const scores = outcomes.map(outcome => {
       return (
         <>
           <Flex.Item size="100px">
             <div className="cell">{this.renderScore()}</div>
           </Flex.Item>
-          {this.renderAlignments(student, outcome)}
+          {
+            outcome.expanded ? (
+              <>
+                <Flex.Item size="100px">
+                  <div className="cell">small</div>
+                </Flex.Item>
+                <Flex.Item size="100px">
+                  <div className="cell">small</div>
+                </Flex.Item>
+              </>
+            ) : null
+          }
         </>
       )
     })
@@ -155,7 +166,7 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderScoresGrid = () => {
-    const {students, outcomes} = this.props
+    const {students} = this.props
     const scores = students.map(student => {
       return this.renderStudentScores()
     })
