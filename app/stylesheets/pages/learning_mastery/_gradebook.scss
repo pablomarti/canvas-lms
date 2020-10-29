@@ -23,6 +23,17 @@ a#accessibility_warning {
   @include fontSize(14px);
 }
 
+.box {
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 18px;
+  float: left;
+  min-height: 18px;
+  padding: 0;
+  width: 18px;
+}
+
 .header-cell {
   position: relative;
 }

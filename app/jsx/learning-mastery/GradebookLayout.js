@@ -22,14 +22,15 @@ import * as apiClient from './apiClient'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
 import Paginator from '../shared/components/Paginator'
 
-
 class GradebookLayout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
       page: 0,
-      pageCount: 10
+      pageCount: 10,
+      sortAsc: true,
+      sortField: ''
     }
   }
 
@@ -37,8 +38,8 @@ class GradebookLayout extends React.Component {
     this.loadPage(1)
   }
 
-  loadPage = (pageNum = 1) => {
-    apiClient.loadRollups(pageNum).then(([outcomes, students, paths, page, page_count]) => {
+  loadPage = (pageNum = 1, sortField = null, sortAsc = null) => {
+    apiClient.loadRollups(pageNum, sortField, sortAsc).then(([outcomes, students, paths, page, page_count]) => {
       this.setState({
         loadedOutcomes: true,
         outcomes,
@@ -50,14 +51,26 @@ class GradebookLayout extends React.Component {
     })
   }
 
+  handleSetSortOrder = (sortField, sortAsc) => {
+    console.log(sortField)
+    console.log(sortAsc)
+    this.setState({
+      loadedOutcomes: false,
+      sortField,
+      sortAsc
+    }, () => {
+      this.loadPage(1, sortField, sortAsc)
+    })
+  }
+
   render() {
-    const {outcomes, loadedOutcomes, students, page, pageCount} = this.state
+    const {loadedOutcomes, students, outcomes, page, pageCount, sortField, sortAsc} = this.state
     if (!loadedOutcomes) {
       return ''
     }
     return (
       <div>
-        <LearningMasteryGradebook students={students} />
+        <LearningMasteryGradebook students={students} outcomes={outcomes} setSortOrder={this.handleSetSortOrder} sortField={sortField} sortAsc={sortAsc} />
         <Paginator
           loadPage={this.loadPage}
           page={page}

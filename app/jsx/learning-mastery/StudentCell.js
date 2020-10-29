@@ -23,7 +23,6 @@ import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
 import $ from 'jquery'
 
 class StudentCell extends React.Component {
-
   static defaultProps = {
     user: {}
   }
@@ -32,12 +31,17 @@ class StudentCell extends React.Component {
     const {user, courseId, sectionName} = this.props
     const grades_html_url = `/courses/${courseId}/grades/${user.id}#tab-outcomes`
     return (
-      <div class="outcome-student-cell-content">
+      <div className="outcome-student-cell-content">
         {/* {{>avatar}} */}
-        <a class="student-grades-list student_context_card_trigger"
-          data-student_id={user.id} data-course_id={courseId}
-          href={grades_html_url}>{user.display_name}</a>
-        <div class="student-section">{sectionName}</div>
+        <a
+          className="student-grades-list student_context_card_trigger"
+          data-student_id={user.id}
+          data-course_id={courseId}
+          href={grades_html_url}
+        >
+          {user.display_name}
+        </a>
+        <div className="student-section">{sectionName}</div>
       </div>
     )
   }

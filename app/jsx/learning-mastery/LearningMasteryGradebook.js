@@ -19,35 +19,31 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
-import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
 import OutcomeHeader from './OutcomeHeader'
 import StudentCell from './StudentCell'
-
+import OutcomeAverageCell from './OutcomeAverageCell'
 import $ from 'jquery'
+import { truncate } from 'lodash'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      expandedOutcomes: {}
+      expandedOutcomes: {},
     }
   }
 
+  toggleSort = (newSortField) => {
+    const { sortField, sortAsc, setSortOrder } = this.props
+    sortField === newSortField ? setSortOrder(sortField, !sortAsc) : setSortOrder(newSortField, true)
+  }
+
+
   static defaultProps = {
-    outcomes: [
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2'
-    ],
-    students: []
+    outcomes: [],
+    students: [],
+    setSortOrder: () => {}
   }
 
   handleExpandedOutcome = (outcomeId, expanded) => {
@@ -59,7 +55,7 @@ class LearningMasteryGradebook extends React.Component {
     const {outcomes} = this.props
     return (
       <Flex direction="row">
-        <div className="sticky-header"  id="stuck-header">
+        <div className="sticky-header" id="stuck-header">
           {outcomes.map((outcome, index) => {
             return (
               <Flex.Item size="200px">
@@ -90,7 +86,7 @@ class LearningMasteryGradebook extends React.Component {
     return <Flex direction="row">{scores}</Flex>
   }
 
-  renderScores = () => {
+  renderScoresGrid = () => {
     const {students, outcomes} = this.props
     const scores = students.map(student => {
       return this.renderStudentScores()
@@ -139,10 +135,26 @@ class LearningMasteryGradebook extends React.Component {
     return (
       <>
         <div>
-          <div style={{borderBottom: '1px solid #BDBDBD', height: '40px', paddingLeft: '135px',overflow: 'hidden', maxWidth: '600px'}} onScroll={this.handleOutcomeScroll}>
-              {this.renderOutcomeRow()}
+          <div
+            style={{
+              borderBottom: '1px solid #BDBDBD',
+              height: '40px',
+              paddingLeft: '135px',
+              overflow: 'hidden',
+              maxWidth: '600px'
+            }}
+            onScroll={this.handleOutcomeScroll}
+          >
+            {this.renderOutcomeRow()}
           </div>
-          <div style={{height: '40px', overflow: 'hidden', borderBottom: '1px solid #BDBDBD', maxWidth: '735px'}}>
+          <div
+            style={{
+              height: '40px',
+              overflow: 'hidden',
+              borderBottom: '1px solid #BDBDBD',
+              maxWidth: '735px'
+            }}
+          >
             {this.renderHeaderRow()}
           </div>
         </div>
@@ -151,7 +163,7 @@ class LearningMasteryGradebook extends React.Component {
             {this.renderStudent()}
           </div>
           <div className="mainWrapper" id="scores" onScroll={this.handleScrollCells}>
-            {this.renderScores()}
+            {this.renderScoresGrid()}
           </div>
         </div>
       </>
@@ -169,15 +181,7 @@ class LearningMasteryGradebook extends React.Component {
         </div>
         <Flex direction="row">
           <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
-            {outcomes.map(outcome => {
-              return (
-                <Flex.Item size="200px">
-                  <div className="cell header-cell">
-                      {/* render average */}
-                  </div>
-                </Flex.Item>
-              )
-            })}
+            {outcomes.map(outcome => <OutcomeAverageCell scores={[]} onClick={() => this.toggleSort(`outcome_${outcome.id}`)} />)}
           </div>
         </Flex>
       </>

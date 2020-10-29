@@ -22,45 +22,21 @@ import {Flex} from '@instructure/ui-flex'
 import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
 import $ from 'jquery'
 
-class OutcomeHeader extends React.Component {
-  constructor(props) {
-    super(props)
-    this.outcomeRef = React.createRef()
-    this.view = null
-  }
-
+class OutcomeAverageCell extends React.Component {
   static defaultProps = {
-    outcome: {}
+    scores: [],
+    onClick: () => {}
   }
-
-  // componentDidMount() {
-  //   const {outcome} = this.props
-  //   this.view = new OutcomeColumnView({
-  //     el: this.outcomeRef.current,
-  //     attributes: outcome,
-  //     totalsFn: () => {}
-  //   })
-  //   this.view.render()
-  // }
-
-  // componentWillUnmount() {
-  //   this.view.remove()
-  // }
 
   render() {
-    const {outcome, onExpandOutcome} = this.props
     return (
-      <>
-        <div className="outcome-column-header" ref={this.outcomeRef}>
-          {outcome.title}
+      <Flex.Item size="200px">
+        <div className="cell header-cell" onClick={this.props.onClick}>
+          <div className="box" style={{width: '25px', background: 'blue'}}> </div>
         </div>
-        <div className="outcome-header-arrow" onClick={() => onExpandOutcome(outcome.id)}>
-          ->
-        </div>
-        {/* TODO: make this an IconButton from instui */}
-      </>
+      </Flex.Item>
     )
   }
 }
 
-export default OutcomeHeader
+export default OutcomeAverageCell
