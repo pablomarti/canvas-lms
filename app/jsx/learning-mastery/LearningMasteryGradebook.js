@@ -201,7 +201,7 @@ class LearningMasteryGradebook extends React.Component {
 
     const alignments = this.outcomeAlignments(outcome.id)
     const size = 200 + 100 * alignments.length
-    return size + 'px';
+    return size + 'px'
   }
 
   renderGradebook = () => {
