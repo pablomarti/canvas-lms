@@ -38,7 +38,7 @@ class GradebookLayout extends React.Component {
       pageCount: 10,
       sortAsc: true,
       sortField: '',
-      ratings: ratings
+      ratings
     }
   }
 
@@ -76,14 +76,6 @@ class GradebookLayout extends React.Component {
   }
 
   changeFilter(i) {
-    const tmpRatings = this.state.ratings;
-    tmpRatings[i].checked = !tmpRatings[i].checked
-    this.setState({
-      ratings: tmpRatings
-    })
-  }
-
-  changeFilter(i) {
     const outcomes = this.state.outcomes
     const ratings = [...this.state.ratings]
     const rollups = [...this.state.rollups]
@@ -105,7 +97,16 @@ class GradebookLayout extends React.Component {
   }
 
   render() {
-    const {loadedOutcomes, students, outcomes, page, pageCount, sortField, sortAsc, rollups} = this.state
+    const {
+      loadedOutcomes,
+      students,
+      outcomes,
+      page,
+      pageCount,
+      sortField,
+      sortAsc,
+      rollups
+    } = this.state
     if (!loadedOutcomes) {
       return ''
     }

@@ -15,19 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import axios from 'axios'
-import I18n from 'i18n!GradebookGrid'
+
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
 import OutcomeHeader from './OutcomeHeader'
 import StudentCell from './StudentCell'
 import OutcomeAverageCell from './OutcomeAverageCell'
 import $ from 'jquery'
-import {truncate} from 'lodash'
 import {getIconClass} from '../outcomes/ColumnTooltip'
-import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
-import OutcomeHeader from './OutcomeHeader'
-import $ from 'jquery'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
@@ -67,6 +62,13 @@ class LearningMasteryGradebook extends React.Component {
     return this.props.alignments
   }
 
+  toggleSort = newSortField => {
+    const {sortField, sortAsc, setSortOrder} = this.props
+    sortField === newSortField
+      ? setSortOrder(sortField, !sortAsc)
+      : setSortOrder(newSortField, true)
+  }
+
   renderOutcomeRow = () => {
     const {outcomes} = this.props
     return (
@@ -74,7 +76,7 @@ class LearningMasteryGradebook extends React.Component {
         <div className="sticky-header" id="stuck-header">
           {outcomes.map(outcome => {
             return (
-              <Flex.Item  size={this.outcomeCellWidth(outcome)}>
+              <Flex.Item size={this.outcomeCellWidth(outcome)}>
                 <div className="cell header-cell">
                   <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
                 </div>
@@ -90,14 +92,16 @@ class LearningMasteryGradebook extends React.Component {
     const rollups = this.props.rollups
     const rollup = rollups.find(r => r.student === student)
     const outcome_rollup = rollup['outcome_' + outcome.id]
-    const icon = getIconClass(outcome_rollup.rating.points, outcome.mastery_points)
-
+    let icon
+    icon = outcome_rollup
+      ? getIconClass(outcome_rollup?.rating?.points, outcome.mastery_points)
+      : getIconClass(undefined)
     return (
       <div
         className="outcome-proficiency-dot"
         style={{
-          backgroundColor: '#' + outcome_rollup.rating.color,
-          opacity: outcome_rollup.checked ? 1 : 0.3
+          backgroundColor: '#' + outcome_rollup?.rating.color,
+          opacity: outcome_rollup?.checked ? 1 : 0.3
         }}
       >
         <div className={icon} />
@@ -133,26 +137,23 @@ class LearningMasteryGradebook extends React.Component {
     if (outcome.expanded) {
       return (
         <>
-        <Flex.Item size="100px">
-          <div className="cell">small</div>
-        </Flex.Item>
-        <Flex.Item size="100px">
-          <div className="cell">small</div>
-        </Flex.Item>
+          <Flex.Item size="100px">
+            <div className="cell">small</div>
+          </Flex.Item>
+          <Flex.Item size="100px">
+            <div className="cell">small</div>
+          </Flex.Item>
         </>
       )
     }
 
-    return (
-      <>
-      </>
-    )
+    return <></>
   }
 
   renderScoresGrid = () => {
     const {students} = this.props
     const scores = students.map(student => {
-      return this.renderStudentScores()
+      return this.renderStudentScores(student)
     })
     return (
       <Flex direction="column" withVisualDebug>
