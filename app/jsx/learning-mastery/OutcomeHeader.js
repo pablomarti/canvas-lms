@@ -52,7 +52,7 @@ class OutcomeHeader extends React.Component {
     return (
       <>
         <div className="outcome-column-header" ref={this.outcomeRef}>
-          {outcome}
+          {outcome.title}
         </div>
         <div className="outcome-header-arrow" onClick={() => onExpandOutcome(outcome.id)}>
           ->
