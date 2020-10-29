@@ -49,13 +49,14 @@ class OutcomeHeader extends React.Component {
 
   render() {
     const {outcome, onExpandOutcome} = this.props
+
     return (
       <>
         <div className="outcome-column-header" ref={this.outcomeRef}>
           {outcome.title}
         </div>
         <div className="outcome-header-arrow" onClick={() => onExpandOutcome(outcome.id)}>
-          ->
+          {outcome.expanded ? '<-' : '->'}
         </div>
         {/* TODO: make this an IconButton from instui */}
       </>
