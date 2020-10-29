@@ -27,6 +27,10 @@ import $ from 'jquery'
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      expandedOutcomes: {}
+    }
   }
 
   static defaultProps = {
@@ -137,6 +141,18 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudent = () => {
     const {students, outcomes} = this.props
+    const scores = students.map(student => {
+      return this.renderStudentScores()
+    })
+    return (
+      <Flex direction="column" withVisualDebug>
+        {scores}
+      </Flex>
+    )
+  }
+
+  renderStudent = () => {
+    const {students, outcomes} = this.props
     return students.map(student => {
       return (
         <div className="cell">
@@ -196,7 +212,6 @@ class LearningMasteryGradebook extends React.Component {
             {this.renderHeaderRow()}
           </div>
         </div>
-
         <div className="wrapper">
           <div className="nav" id="user-list" onScroll={this.handleStudentScroll}>
             {this.renderStudent()}
