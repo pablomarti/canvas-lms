@@ -32,22 +32,42 @@ import $ from 'jquery'
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      expandedOutcomes: {}
-    }
   }
 
   static defaultProps = {
-    outcomes: [],
+    outcomes: [
+      {id: 1, title: 'outcome_1', expanded: false},
+      {id: 2, title: 'outcome_2', expanded: false},
+      {id: 3, title: 'outcome_3', expanded: false},
+      {id: 4, title: 'outcome_4', expanded: false},
+      {id: 5, title: 'outcome_5', expanded: false},
+      {id: 6, title: 'outcome_6', expanded: false},
+      {id: 7, title: 'outcome_7', expanded: false},
+      {id: 8, title: 'outcome_8', expanded: false},
+      {id: 9, title: 'outcome_9', expanded: false},
+      {id: 10, title: 'outcome_10', expanded: false}
+    ],
     students: [],
     setSortOrder: () => {},
+    alignments: [
+      {alignment: 'Quiz'},
+      {alignment: 'Assignment'}
+    ],
     rollups: []
   }
 
-  handleExpandedOutcome = (outcomeId, expanded) => {
-    console.log(outcomeId)
-    console.log(expanded)
+  handleExpandedOutcome = (outcomeId) => {
+    const outcomes = [...this.props.outcomes]
+    const outcome = outcomes.find(o => o.id == outcomeId)
+    outcome.expanded = !outcome.expanded
+
+    this.setState({
+      outcome
+    })
+  }
+
+  outcomeAlignments = outcomeId => {
+    return this.props.alignments
   }
 
   renderOutcomeRow = () => {
@@ -56,14 +76,25 @@ class LearningMasteryGradebook extends React.Component {
       <Flex direction="row">
         <div className="sticky-header" id="stuck-header">
           {outcomes.map((outcome, index) => {
-            return (
-              <Flex.Item size="200px">
-                <div className="cell header-cell">
-                  <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
-                </div>
-              </Flex.Item>
-            )
-          })}
+            if (outcome.expanded) {
+              const alignments = this.outcomeAlignments(outcome.id)
+              const size = 200 + (100 * alignments.length);
+              return (
+                <Flex.Item size={size + 'px'}>
+                  <div className="cell header-cell">
+                    <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
+                  </div>
+                </Flex.Item>
+              )
+            } else {
+              <Flex.Item size='200px'>
+                  <div className="cell header-cell">
+                    <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
+                  </div>
+                </Flex.Item>
+            }
+          })
+        }
         </div>
       </Flex>
     )
@@ -90,30 +121,37 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudentScores = student => {
     const {outcomes} = this.props
-    const scores = outcomes.map((outcome, index) => {
-      if (index == 1) {
-        return (
-          <>
-            <Flex.Item size="100px">
-              <div className="cell">{this.renderScore()}</div>
-            </Flex.Item>
-            <Flex.Item size="100px">
-              <div className="cell">small</div>
-            </Flex.Item>
-            <Flex.Item size="100px">
-              <div className="cell">small</div>
-            </Flex.Item>
-          </>
-        )
-      } else {
-        return (
-          <Flex.Item size="200px">
+    const scores = outcomes.map((outcome) => {
+      return (
+        <>
+          <Flex.Item size="100px">
             <div className="cell">{this.renderScore()}</div>
           </Flex.Item>
-        )
-      }
+          {this.renderAlignments(student, outcome)}
+        </>
+      )
     })
     return <Flex direction="row">{scores}</Flex>
+  }
+
+  renderAlignments(student, outcome) {
+    if (outcome.expanded) {
+      return (
+        <>
+        <Flex.Item size="100px">
+          <div className="cell">small</div>
+        </Flex.Item>
+        <Flex.Item size="100px">
+          <div className="cell">small</div>
+        </Flex.Item>
+        </>
+      )
+    }
+
+    return (
+      <>
+      </>
+    )
   }
 
   renderScoresGrid = () => {
@@ -188,6 +226,7 @@ class LearningMasteryGradebook extends React.Component {
             {this.renderHeaderRow()}
           </div>
         </div>
+
         <div className="wrapper">
           <div className="nav" id="user-list" onScroll={this.handleStudentScroll}>
             {this.renderStudent()}
