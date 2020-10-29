@@ -124,8 +124,8 @@ class LearningMasteryGradebook extends React.Component {
     const scores = outcomes.map(outcome => {
       return (
         <>
-          <Flex.Item size="100px">
-            <div className="cell">{this.renderScore()}</div>
+          <Flex.Item size="200px">
+            <div className="cell">{this.renderScore(student, outcome)}</div>
           </Flex.Item>
           {outcome.expanded ? (
             <>
