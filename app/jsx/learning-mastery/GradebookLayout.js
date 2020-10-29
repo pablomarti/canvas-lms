@@ -39,28 +39,33 @@ class GradebookLayout extends React.Component {
   }
 
   loadPage = (pageNum = 1, sortField = null, sortAsc = null) => {
-    apiClient.loadRollups(pageNum, sortField, sortAsc).then(([outcomes, students, paths, page, page_count]) => {
-      this.setState({
-        loadedOutcomes: true,
-        outcomes,
-        students,
-        paths,
-        page,
-        pageCount: page_count
+    apiClient
+      .loadRollups(pageNum, sortField, sortAsc)
+      .then(([outcomes, students, paths, page, page_count]) => {
+        this.setState({
+          loadedOutcomes: true,
+          outcomes,
+          students,
+          paths,
+          page,
+          pageCount: page_count
+        })
       })
-    })
   }
 
   handleSetSortOrder = (sortField, sortAsc) => {
     console.log(sortField)
     console.log(sortAsc)
-    this.setState({
-      loadedOutcomes: false,
-      sortField,
-      sortAsc
-    }, () => {
-      this.loadPage(1, sortField, sortAsc)
-    })
+    this.setState(
+      {
+        loadedOutcomes: false,
+        sortField,
+        sortAsc
+      },
+      () => {
+        this.loadPage(1, sortField, sortAsc)
+      }
+    )
   }
 
   render() {
@@ -70,7 +75,13 @@ class GradebookLayout extends React.Component {
     }
     return (
       <div>
-        <LearningMasteryGradebook students={students} outcomes={outcomes} setSortOrder={this.handleSetSortOrder} sortField={sortField} sortAsc={sortAsc} />
+        <LearningMasteryGradebook
+          students={students}
+          outcomes={outcomes}
+          setSortOrder={this.handleSetSortOrder}
+          sortField={sortField}
+          sortAsc={sortAsc}
+        />
         <Paginator
           loadPage={this.loadPage}
           page={page}

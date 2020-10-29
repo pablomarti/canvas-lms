@@ -23,22 +23,23 @@ import OutcomeHeader from './OutcomeHeader'
 import StudentCell from './StudentCell'
 import OutcomeAverageCell from './OutcomeAverageCell'
 import $ from 'jquery'
-import { truncate } from 'lodash'
+import {truncate} from 'lodash'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      expandedOutcomes: {},
+      expandedOutcomes: {}
     }
   }
 
-  toggleSort = (newSortField) => {
-    const { sortField, sortAsc, setSortOrder } = this.props
-    sortField === newSortField ? setSortOrder(sortField, !sortAsc) : setSortOrder(newSortField, true)
+  toggleSort = newSortField => {
+    const {sortField, sortAsc, setSortOrder} = this.props
+    sortField === newSortField
+      ? setSortOrder(sortField, !sortAsc)
+      : setSortOrder(newSortField, true)
   }
-
 
   static defaultProps = {
     outcomes: [],
@@ -181,7 +182,12 @@ class LearningMasteryGradebook extends React.Component {
         </div>
         <Flex direction="row">
           <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
-            {outcomes.map(outcome => <OutcomeAverageCell scores={[]} onClick={() => this.toggleSort(`outcome_${outcome.id}`)} />)}
+            {outcomes.map(outcome => (
+              <OutcomeAverageCell
+                scores={[]}
+                onClick={() => this.toggleSort(`outcome_${outcome.id}`)}
+              />
+            ))}
           </div>
         </Flex>
       </>

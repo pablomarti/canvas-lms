@@ -25,7 +25,7 @@ const rollupsUrl = (course, exclude, page, sortField, sortAsc) => {
   console.log(sortField)
   if (sortField) {
     if (sortField.startsWith('outcome')) {
-      [sortField, sortOutcomeId] = sortField.split('_')
+      ;[sortField, sortOutcomeId] = sortField.split('_')
       sortParams = `&sort_by=${sortField}`
       sortParams = `${sortParams}&sort_outcome_id=${sortOutcomeId}`
     } else {

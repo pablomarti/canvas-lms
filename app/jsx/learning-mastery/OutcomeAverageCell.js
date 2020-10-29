@@ -32,7 +32,9 @@ class OutcomeAverageCell extends React.Component {
     return (
       <Flex.Item size="200px">
         <div className="cell header-cell" onClick={this.props.onClick}>
-          <div className="box" style={{width: '25px', background: 'blue'}}> </div>
+          <div className="box" style={{width: '25px', background: 'blue'}}>
+            {' '}
+          </div>
         </div>
       </Flex.Item>
     )
