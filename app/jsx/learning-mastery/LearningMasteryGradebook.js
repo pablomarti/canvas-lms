@@ -127,18 +127,16 @@ class LearningMasteryGradebook extends React.Component {
           <Flex.Item size="100px">
             <div className="cell">{this.renderScore()}</div>
           </Flex.Item>
-          {
-            outcome.expanded ? (
-              <>
-                <Flex.Item size="100px">
-                  <div className="cell">small</div>
-                </Flex.Item>
-                <Flex.Item size="100px">
-                  <div className="cell">small</div>
-                </Flex.Item>
-              </>
-            ) : null
-          }
+          {outcome.expanded ? (
+            <>
+              <Flex.Item size="100px">
+                <div className="cell">small</div>
+              </Flex.Item>
+              <Flex.Item size="100px">
+                <div className="cell">small</div>
+              </Flex.Item>
+            </>
+          ) : null}
         </>
       )
     })
