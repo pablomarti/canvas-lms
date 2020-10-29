@@ -19,6 +19,7 @@ import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
+import {getIconClass} from '../outcomes/ColumnTooltip'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
@@ -28,19 +29,9 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   static defaultProps = {
-    outcomes: [
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2',
-      'outcome_1',
-      'outcome_2'
-    ],
-    students: []
+    outcomes: [],
+    students: [],
+    rollups: []
   }
 
   renderOutcomeHeader = outcome => {
@@ -55,7 +46,7 @@ class LearningMasteryGradebook extends React.Component {
           {outcomes.map(outcome => {
             return (
               <Flex.Item size="200px" shouldGrow padding="small large small large">
-                {this.renderOutcomeHeader(outcome)}
+                {this.renderOutcomeHeader(outcome.title)}
               </Flex.Item>
             )
           })}
@@ -64,16 +55,31 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  renderScore = () => {
-    return <div className="score">5/3</div>
+  renderScore = (student, outcome) => {
+    const rollups = this.props.rollups
+    const rollup = rollups.find(r => r.student === student)
+    const outcome_rollup = rollup['outcome_' + outcome.id]
+    const icon = getIconClass(outcome_rollup.rating.points, outcome.mastery_points)
+
+    return (
+      <div
+        className="outcome-proficiency-dot"
+        style={{
+          backgroundColor: '#' + outcome_rollup.rating.color,
+          opacity: outcome_rollup.checked ? 1 : 0.3
+        }}
+      >
+        <div className={icon} />
+      </div>
+    )
   }
 
-  renderStudentScores = () => {
+  renderStudentScores = student => {
     const {outcomes} = this.props
     const scores = outcomes.map(outcome => {
       return (
         <Flex.Item size="200px">
-          <div className="cell">{this.renderScore()}</div>
+          <div className="cell">{this.renderScore(student, outcome)}</div>
         </Flex.Item>
       )
     })
@@ -81,9 +87,9 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderScores = () => {
-    const {students, outcomes} = this.props
+    const {students} = this.props
     const scores = students.map(student => {
-      return this.renderStudentScores()
+      return this.renderStudentScores(student)
     })
     return (
       <Flex direction="column" withVisualDebug>
@@ -117,7 +123,6 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderGradebook = () => {
-    const {outcomes, students} = this.props
     return (
       <>
         <div className="header">

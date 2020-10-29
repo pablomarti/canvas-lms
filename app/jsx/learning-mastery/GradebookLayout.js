@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import axios from 'axios'
 import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
 import ProficiencyFilter from './ProficiencyFilter'
+import Rollups from './Rollups'
 
 class GradebookLayout extends React.Component {
   constructor(props) {
@@ -38,9 +38,10 @@ class GradebookLayout extends React.Component {
   }
 
   async componentDidMount() {
-    apiClient.loadRollups().then(([outcomes, students, paths]) => {
+    apiClient.loadRollups().then(([outcomes, students, paths, rollups]) => {
       this.setState({
         loadedOutcomes: true,
+        rollups: Rollups(rollups, students, outcomes),
         outcomes,
         students,
         paths
@@ -49,15 +50,28 @@ class GradebookLayout extends React.Component {
   }
 
   changeFilter(i) {
-    const tmpRatings = [...this.state.ratings]
-    tmpRatings[i].checked = !tmpRatings[i].checked
+    const outcomes = this.state.outcomes
+    const ratings = [...this.state.ratings]
+    const rollups = [...this.state.rollups]
+
+    ratings[i].checked = !ratings[i].checked
+
+    rollups.forEach(r => {
+      outcomes.forEach(o => {
+        if (r['outcome_' + o.id].rating.points === ratings[i].points) {
+          r['outcome_' + o.id].checked = ratings[i].checked
+        }
+      })
+    })
+
     this.setState({
-      ratings: tmpRatings
+      ratings,
+      rollups
     })
   }
 
   render() {
-    const {outcomes, loadedOutcomes, students} = this.state
+    const {outcomes, loadedOutcomes, students, rollups} = this.state
     if (!loadedOutcomes) {
       return ''
     }
@@ -65,7 +79,7 @@ class GradebookLayout extends React.Component {
     return (
       <div>
         <ProficiencyFilter ratings={this.state.ratings} />
-        <LearningMasteryGradebook students={students} />
+        <LearningMasteryGradebook outcomes={outcomes} students={students} rollups={rollups} />
       </div>
     )
   }
