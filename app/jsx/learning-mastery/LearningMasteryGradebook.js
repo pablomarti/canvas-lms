@@ -43,10 +43,7 @@ class LearningMasteryGradebook extends React.Component {
       {id: 10, title: 'outcome_10', expanded: false}
     ],
     students: [],
-    alignments: [
-      {alignment: 'Quiz'},
-      {alignment: 'Assignment'}
-    ],
+    alignments: [{alignment: 'Quiz'}, {alignment: 'Assignment'}],
     rollups: []
   }
 
@@ -70,30 +67,16 @@ class LearningMasteryGradebook extends React.Component {
       <Flex direction="row" withVisualDebug padding="0 0 large 0" width="600px">
         <div id="stuck-header">
           {outcomes.map(outcome => {
-            if (outcome.expanded) {
-              const alignments = this.outcomeAlignments(outcome.id)
-              const size = 200 + 100 * alignments.length
-              return (
-                <>
-                  <Flex.Item size={size + 'px'}>
-                    <div className="cell header-cell">
-                      <OutcomeHeader
-                        onExpandOutcome={this.handleExpandedOutcome}
-                        outcome={outcome}
-                      />
-                    </div>
-                  </Flex.Item>
-                </>
-              )
-            } else {
-              return (
-                <Flex.Item size="200px">
-                  <div className="cell header-cell">
-                    <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
-                  </div>
-                </Flex.Item>
-              )
-            }
+            return (
+              <Flex.Item size={this.outcomeCellWidth(outcome)}>
+                <div className="cell header-cell">
+                  <OutcomeHeader
+                    onExpandOutcome={this.handleExpandedOutcome}
+                    outcome={outcome}
+                  />
+                </div>
+              </Flex.Item>            
+            )
           })}
         </div>
       </Flex>
@@ -187,6 +170,16 @@ class LearningMasteryGradebook extends React.Component {
     $('#scores')[0].scrollTop = e.target.scrollTop
   }
 
+  outcomeCellWidth = outcome => {
+    if (!outcome.expanded) {
+      return '200px'
+    }
+
+    const alignments = this.outcomeAlignments(outcome.id)
+    const size = 200 + 100 * alignments.length
+    return size + 'px';
+  }
+
   renderGradebook = () => {
     return (
       <>
@@ -227,7 +220,7 @@ class LearningMasteryGradebook extends React.Component {
         <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
           {outcomes.map(outcome => {
             return (
-              <Flex.Item size="200px">
+              <Flex.Item size={this.outcomeCellWidth(outcome)}>
                 <div className="cell header-cell">
                   <div className="outcome-column-header">{outcome.title}</div>{' '}
                   {/* TODO: Replace with averages */}
