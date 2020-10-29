@@ -25,12 +25,13 @@ import $ from 'jquery'
 class OutcomeAverageCell extends React.Component {
   static defaultProps = {
     scores: [],
-    onClick: () => {}
+    onClick: () => {},
+    size: ''
   }
 
   render() {
     return (
-      <Flex.Item size="200px">
+      <Flex.Item size={this.props.size}>
         <div className="cell header-cell" onClick={this.props.onClick}>
           <div className="box" style={{width: '25px', background: 'blue'}}>
             {' '}
