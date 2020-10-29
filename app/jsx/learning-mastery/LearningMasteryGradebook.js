@@ -70,12 +70,9 @@ class LearningMasteryGradebook extends React.Component {
             return (
               <Flex.Item size={this.outcomeCellWidth(outcome)}>
                 <div className="cell header-cell">
-                  <OutcomeHeader
-                    onExpandOutcome={this.handleExpandedOutcome}
-                    outcome={outcome}
-                  />
+                  <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
                 </div>
-              </Flex.Item>            
+              </Flex.Item>
             )
           })}
         </div>
@@ -177,7 +174,7 @@ class LearningMasteryGradebook extends React.Component {
 
     const alignments = this.outcomeAlignments(outcome.id)
     const size = 200 + 100 * alignments.length
-    return size + 'px';
+    return size + 'px'
   }
 
   renderGradebook = () => {
