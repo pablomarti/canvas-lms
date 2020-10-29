@@ -21,6 +21,8 @@ import React from 'react'
 import {Flex} from '@instructure/ui-flex'
 import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
 import OutcomeHeader from './OutcomeHeader'
+import StudentCell from './StudentCell'
+
 import $ from 'jquery'
 
 class LearningMasteryGradebook extends React.Component {
@@ -56,32 +58,16 @@ class LearningMasteryGradebook extends React.Component {
   renderOutcomeRow = () => {
     const {outcomes} = this.props
     return (
-      <Flex direction="row" withVisualDebug padding="0 0 large 0" width="600px">
-        <div id="stuck-header">
+      <Flex direction="row">
+        <div className="sticky-header"  id="stuck-header">
           {outcomes.map((outcome, index) => {
-            if (index == 1) {
-              // TODO: remove. we need to read the 'expandedOutcomes' from state here
-              return (
-                <>
-                  <Flex.Item size="300px">
-                    <div className="cell header-cell">
-                      <OutcomeHeader
-                        onExpandOutcome={this.handleExpandedOutcome}
-                        outcome={outcome}
-                      />
-                    </div>
-                  </Flex.Item>
-                </>
-              )
-            } else {
-              return (
-                <Flex.Item size="200px">
-                  <div className="cell header-cell">
-                    <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
-                  </div>
-                </Flex.Item>
-              )
-            }
+            return (
+              <Flex.Item size="200px">
+                <div className="cell header-cell">
+                  <OutcomeHeader onExpandOutcome={this.handleExpandedOutcome} outcome={outcome} />
+                </div>
+              </Flex.Item>
+            )
           })}
         </div>
       </Flex>
@@ -94,28 +80,12 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudentScores = () => {
     const {outcomes} = this.props
-    const scores = outcomes.map((outcome, index) => {
-      if (index == 1) {
-        return (
-          <>
-            <Flex.Item size="100px">
-              <div className="cell">{this.renderScore()}</div>
-            </Flex.Item>
-            <Flex.Item size="100px">
-              <div className="cell">small</div>
-            </Flex.Item>
-            <Flex.Item size="100px">
-              <div className="cell">small</div>
-            </Flex.Item>
-          </>
-        )
-      } else {
-        return (
-          <Flex.Item size="200px">
-            <div className="cell">{this.renderScore()}</div>
-          </Flex.Item>
-        )
-      }
+    const scores = outcomes.map(outcome => {
+      return (
+        <Flex.Item size="200px">
+          <div className="cell">{this.renderScore()}</div>
+        </Flex.Item>
+      )
     })
     return <Flex direction="row">{scores}</Flex>
   }
@@ -137,7 +107,9 @@ class LearningMasteryGradebook extends React.Component {
     return students.map(student => {
       return (
         <div className="cell">
-          <div className="name">{student.name}</div>
+          <div className="name">
+            <StudentCell user={student} courseId={ENV.context_asset_string.split('_')[1]} />
+          </div>
         </div>
       )
     })
@@ -146,7 +118,6 @@ class LearningMasteryGradebook extends React.Component {
   handleScrollCells = e => {
     $('#stuck-header')[0].scrollLeft = e.target.scrollLeft
     $('#averages-row')[0].scrollLeft = e.target.scrollLeft
-
     $('#user-list')[0].scrollTop = e.target.scrollTop
   }
 
@@ -165,22 +136,13 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderGradebook = () => {
-    const {outcomes, students} = this.props
     return (
       <>
-        <div className="table-header-row">
-          <Flex height="40px" direction="column">
-            <Flex.Item
-              as="header"
-              size="40px"
-              overflowX="hidden"
-              overflowY="hidden"
-              onScroll={this.handleOutcomeScroll}
-            >
+        <div>
+          <div style={{borderBottom: '1px solid #BDBDBD', height: '40px', paddingLeft: '135px',overflow: 'hidden', maxWidth: '600px'}} onScroll={this.handleOutcomeScroll}>
               {this.renderOutcomeRow()}
-            </Flex.Item>
-          </Flex>
-          <div style={{height: '40px', width: '600px', overflow: 'hidden'}}>
+          </div>
+          <div style={{height: '40px', overflow: 'hidden', borderBottom: '1px solid #BDBDBD', maxWidth: '735px'}}>
             {this.renderHeaderRow()}
           </div>
         </div>
@@ -197,23 +159,28 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderHeaderRow = () => {
-    const {outcomes, students} = this.props
-
+    const {outcomes} = this.props
     return (
-      <Flex direction="row" withVisualDebug width="600px">
-        <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
-          {outcomes.map(outcome => {
-            return (
-              <Flex.Item size="200px">
-                <div className="cell header-cell">
-                  <div className="outcome-column-header">{outcome}</div>{' '}
-                  {/* TODO: Replace with averages */}
-                </div>
-              </Flex.Item>
-            )
-          })}
+      <>
+        <div style={{height: '40px', width: '135px', float: 'left'}}>
+          <div className="cell header-cell">
+            <div className="outcome-column-header">Students</div>
+          </div>
         </div>
-      </Flex>
+        <Flex direction="row">
+          <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
+            {outcomes.map(outcome => {
+              return (
+                <Flex.Item size="200px">
+                  <div className="cell header-cell">
+                      {/* render average */}
+                  </div>
+                </Flex.Item>
+              )
+            })}
+          </div>
+        </Flex>
+      </>
     )
   }
 

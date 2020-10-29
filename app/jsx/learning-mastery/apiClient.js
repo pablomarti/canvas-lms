@@ -29,9 +29,11 @@ export const loadRollups = (page = 1) => {
   const course = ENV.context_asset_string.split('_')[1]
   const url = rollupsUrl(course, exclude, page)
   return axios.get(url).then(({data}) => {
+    console.log(data)
     const outcomes = data.linked.outcomes
     const students = data.linked.users
     const outcomePaths = data.linked.outcome_paths
-    return [outcomes, students, outcomePaths]
+    const {page, page_count} = data.meta.pagination
+    return [outcomes, students, outcomePaths, page, page_count]
   })
 }
