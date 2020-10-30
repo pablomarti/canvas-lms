@@ -22,10 +22,12 @@ import Outcome from '../../models/grade_summary/Outcome'
 import d3 from 'd3'
 import I18n from 'i18nObj'
 import popover_template from 'jst/outcomes/outcomePopover'
+import new_popover_template from 'jst/outcomes/newOutcomePopover'
 
 export default class OutcomeColumnView extends View
 
     popover_template: popover_template
+    new_popover_template: new_popover_template
 
     @optionProperty 'totalsFn'
 
@@ -41,7 +43,10 @@ export default class OutcomeColumnView extends View
       @totalsFn()
       @pickColors()
       attributes = new Outcome(@attributes)
-      popover = new Popover(e, @popover_template(attributes.present()), verticalSide: 'bottom', invertOffset: true)
+      if(ENV.GRADEBOOK_OPTIONS.IMPROVED_LMGB)
+        popover = new Popover(e, @new_popover_template(attributes.present()), verticalSide: 'bottom', invertOffset: true)
+      else
+        popover = new Popover(e, @popover_template(attributes.present()), verticalSide: 'bottom', invertOffset: true)
       popover.el.on('mouseenter', @mouseenter)
       popover.el.on('mouseleave', @mouseleave)
       @renderChart()

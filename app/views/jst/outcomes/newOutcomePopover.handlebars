@@ -1,0 +1,34 @@
+<div class="outcome-details{{#if dialog}}-dialog{{/if}}">
+    <div class="line-graph">
+        <div class="screenreader-only"></div>
+    </div>
+    <div class="head-content" tabindex="0">
+        <div class="title">{{title}}</div>
+        <div class="description">{{description}}</div>
+    </div>
+    {{#if alternate_description}}
+    <div class="alternate-description">
+        <div class="title">{{friendly_name}}</div>
+        <div class="description">{{friendly_description}}</div>
+    </div>
+    {{/if}}
+    {{#if description}}<div class="description">{{{description}}}</div>{{/if}}
+    <div class="chart">
+        {{#if ratings.result_count}}
+            <div class="chart-image pull-left"></div>
+            <ol class="ratings pull-left">
+                {{#each ratings}}
+                    <li class="rating"><span class="legend-color" style="background-color: {{color}}" /> {{description}}</li>
+                {{/each}}
+            </ol>
+        {{else}}
+            <p><img src="/images/pie-chart-disabled.png" /></p>
+            <p>{{#t "no_results"}}(no results){{/t}}</p>
+        {{/if}}
+    </div>
+
+    <div class="footer-content">
+        <div class="method"><p><b>Calculation Method:</b> {{method}}</p></div>
+        <div class="contributing-scores"><a href="">View Contributing Scores</a></div>
+    </div>
+    </div>
