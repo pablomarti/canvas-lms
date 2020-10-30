@@ -295,10 +295,10 @@ class LearningMasteryGradebook extends React.Component {
 
               if (outcome.expanded) {
                 alignments = this.outcomeAlignments(outcome).map(a => (
-                    <Flex.Item size="100px">
-                      {this.props.alignments.find(al => al.id == a)?.name}
-                    </Flex.Item>
-                  ))
+                  <Flex.Item size="100px">
+                    {this.props.alignments.find(al => al.id == a)?.name}
+                  </Flex.Item>
+                ))
               }
 
               return (
