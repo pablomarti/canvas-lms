@@ -299,7 +299,7 @@ class LearningMasteryGradebook extends React.Component {
               return (
                 <>
                   <OutcomeAverageCell
-                    size='200px'
+                    size="200px"
                     outcome={outcome}
                     scores={[]}
                     isReversed={`outcome_${outcome.id}` === sortField ? sortAsc : false}
