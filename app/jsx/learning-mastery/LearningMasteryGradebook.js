@@ -34,7 +34,7 @@ class LearningMasteryGradebook extends React.Component {
     students: [],
     alignments: [],
     rollups: [],
-    setSortOrder: () => {},
+    setSortOrder: () => {}
   }
 
   handleExpandedOutcome = outcomeId => {
@@ -48,7 +48,7 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   outcomeAlignments = outcome => {
-    return outcome?.alignments?.filter(o => o.indexOf("rubric_") === -1) || []
+    return outcome?.alignments?.filter(o => o.indexOf('rubric_') === -1) || []
   }
 
   toggleSort = newSortField => {
@@ -114,14 +114,16 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderAlignments(student, outcome) {
-    if(!outcome.expanded) {
+    if (!outcome.expanded) {
       return null
     }
 
     return this.outcomeAlignments(outcome).map(a => {
-      const submission = this.props.submissions.find(s => s.user_id === student.id && s.assignment_id === a)
+      const submission = this.props.submissions.find(
+        s => s.user_id === student.id && s.assignment_id === a
+      )
       const score = submission?.score || 0
-  
+
       return (
         <Flex.Item size="100px">
           <div className="cell">{score}</div>
