@@ -143,10 +143,6 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderAlignments(student, outcome) {
-    if (!outcome.expanded) {
-      return null
-    }
-
     const rollup = this.loadRollup(student)
 
     return this.outcomeAlignments(outcome).map(a => {
@@ -164,7 +160,7 @@ class LearningMasteryGradebook extends React.Component {
             <div
               className="outcome-proficiency-dot"
               style={{
-                backgroundColor: '#' + outcomes_result?.rating.color,
+                backgroundColor: outcomes_result?.rating.color,
                 opacity: outcome_rollup?.checked ? 1 : 0.3
               }}
             >
@@ -239,6 +235,7 @@ class LearningMasteryGradebook extends React.Component {
               paddingLeft: '134px',
               overflow: 'hidden',
               maxWidth: '880px',
+              borderRight: '1px solid #BDBDBD',
               width: this.props.outcomes.length * 300
             }}
             onScroll={this.handleOutcomeScroll}
@@ -250,8 +247,6 @@ class LearningMasteryGradebook extends React.Component {
               height: '40px',
               overflow: 'hidden',
               borderBottom: '1px solid #BDBDBD',
-              borderRight: '1px solid #BDBDBD',
-
               maxWidth: '1015px', // 880 + 135
               width: this.props.outcomes.length * 300 + 135
             }}
@@ -293,7 +288,7 @@ class LearningMasteryGradebook extends React.Component {
             {outcomes.map(outcome => {
               let alignments
 
-              if (outcome.expanded) {
+              if (this.state.expandedOutcomes[outcome.id]) {
                 alignments = this.outcomeAlignments(outcome).map(a => (
                   <Flex.Item size="100px">
                     {this.props.alignments.find(al => al.id == a)?.name}
