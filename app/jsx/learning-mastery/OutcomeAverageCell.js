@@ -26,7 +26,8 @@ class OutcomeAverageCell extends React.Component {
     onClick: () => {},
     size: '',
     outcome: {},
-    isReversed: false
+    isReversed: false,
+    isExpanded: false
   }
 
   renderBox = (width, color) => {
@@ -38,7 +39,7 @@ class OutcomeAverageCell extends React.Component {
     const ratings = outcome?.ratings || []
     return (isReversed ? [...ratings].reverse() : ratings).map(rating => {
       if (rating?.percent?.length > 0 && rating.percent[0] > 0) {
-        const width = (rating.percent[0] / 100.0) * 250
+        const width = (rating.percent[0] / 100.0) * (this.props.isExpanded ? 150.0 : 250.0)
         return this.renderBox(width, rating.color)
       }
     })

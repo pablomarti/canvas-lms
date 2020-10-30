@@ -160,7 +160,9 @@ class LearningMasteryGradebook extends React.Component {
             <div
               className="outcome-proficiency-dot"
               style={{
-                backgroundColor: outcomes_result?.rating.color,
+                backgroundColor: outcomes_result?.rating?.color
+                  ? outcomes_result?.rating.color
+                  : `#FFFFFF`,
                 opacity: outcome_rollup?.checked ? 1 : 0.3
               }}
             >
@@ -299,7 +301,8 @@ class LearningMasteryGradebook extends React.Component {
               return (
                 <>
                   <OutcomeAverageCell
-                    size="200px"
+                    isExpanded={this.state.expandedOutcomes[outcome.id]}
+                    size={this.state.expandedOutcomes[outcome.id] ? '200px' : '300px'}
                     outcome={outcome}
                     scores={[]}
                     isReversed={`outcome_${outcome.id}` === sortField ? sortAsc : false}
