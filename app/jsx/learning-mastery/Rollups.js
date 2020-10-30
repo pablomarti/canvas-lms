@@ -21,13 +21,15 @@ function loadRow(rollups_group, students, outcomes, outcomes_results) {
 
   const user = rollup.links.user
   const student = students.find(s => s.id === user)
-  const student_outcomes_results = outcomes_results.filter(r => r.user_id === user).map(r => {
-    const result = {...r}
-    const outcome = outcomes.find(o => o.id === result.outcome_id)
-    const ratings = outcome.ratings
-    result['rating'] = ratings.find((r, i) => loadRating(ratings, result.score, r, i))
-    return result
-  })
+  const student_outcomes_results = outcomes_results
+    .filter(r => r.user_id === user)
+    .map(r => {
+      const result = {...r}
+      const outcome = outcomes.find(o => o.id === result.outcome_id)
+      const ratings = outcome.ratings
+      result.rating = ratings.find((r, i) => loadRating(ratings, result.score, r, i))
+      return result
+    })
   const row = {student, student_outcomes_results}
 
   rollup.scores.forEach(s => {
@@ -65,5 +67,7 @@ export default function Rollups(rollups, students, outcomes, outcomes_results) {
 
   const ordered_rollups = user_ids.map(u => filtered_rollups[u])
 
-  return ordered_rollups.map(r => loadRow(r, students, outcomes, outcomes_results)).filter(r => r !== null)
+  return ordered_rollups
+    .map(r => loadRow(r, students, outcomes, outcomes_results))
+    .filter(r => r !== null)
 }

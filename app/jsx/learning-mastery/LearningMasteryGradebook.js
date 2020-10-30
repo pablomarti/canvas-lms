@@ -95,7 +95,7 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  loadRollup = (student) => {
+  loadRollup = student => {
     const rollups = this.props.rollups
     const rollup = rollups.find(r => r.student === student)
     return rollup
@@ -150,14 +150,13 @@ class LearningMasteryGradebook extends React.Component {
     const rollup = this.loadRollup(student)
 
     return this.outcomeAlignments(outcome).map(a => {
-      const outcomes_result = rollup?.student_outcomes_results?.find(r => r.assignment_id === a) || null
+      const outcomes_result =
+        rollup?.student_outcomes_results?.find(r => r.assignment_id === a) || null
       const outcome_rollup = rollup['outcome_' + outcome.id]
       const score = outcomes_result?.score || 0
 
       let icon
-      icon = outcome_rollup
-        ? getIconClass(score, outcome.mastery_points)
-        : getIconClass(undefined)
+      icon = outcome_rollup ? getIconClass(score, outcome.mastery_points) : getIconClass(undefined)
 
       return (
         <Flex.Item size="100px">
@@ -295,11 +294,13 @@ class LearningMasteryGradebook extends React.Component {
               let alignments
 
               if (outcome.expanded) {
-                alignments = outcome.alignments?.filter(a => a.indexOf('rubric_') === -1)?.map(a => (
-                  <Flex.Item size='100px'>
-                    {this.props.alignments.find(al => al.id == a)?.name}
-                  </Flex.Item>
-                ))
+                alignments = outcome.alignments
+                  ?.filter(a => a.indexOf('rubric_') === -1)
+                  ?.map(a => (
+                    <Flex.Item size="100px">
+                      {this.props.alignments.find(al => al.id == a)?.name}
+                    </Flex.Item>
+                  ))
               }
 
               return (
@@ -307,6 +308,7 @@ class LearningMasteryGradebook extends React.Component {
                   <OutcomeAverageCell
                     size='200px'
                     outcome={outcome}
+                    scores={[]}
                     isReversed={`outcome_${outcome.id}` === sortField ? sortAsc : false}
                     onClick={() => this.toggleSort(`outcome_${outcome.id}`)}
                   />
