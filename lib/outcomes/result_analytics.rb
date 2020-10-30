@@ -132,7 +132,7 @@ module Outcomes
       rollups + missing_users.map { |u| Rollup.new(u, []) }
     end
 
-    # Public: Gets rating percents for outcomes based on rollup
+    # Public: Gets rating percents and counts for outcomes based on rollup
     #
     # Returns a hash of outcome id to array of rating percents
     def rating_percents(rollups)
@@ -156,7 +156,7 @@ module Outcomes
     def to_percents(count_arr)
       total = count_arr.sum
       return count_arr if total.zero?
-      count_arr.map {|v| (100.0 * v / total).round}
+      count_arr.map {|v| [(100.0 * v / total).round, v]}
     end
 
     class << self
