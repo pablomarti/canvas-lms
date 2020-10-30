@@ -48,6 +48,15 @@ export const loadRollups = (page = 1, sortField = '', sortAsc = '') => {
     const outcomes_results = data.linked.outcomes_results
     const alignments = data.linked.alignments
     const {page, page_count} = data.meta.pagination
-    return [outcomes, students, outcomes_results, alignments, outcomePaths, page, page_count, data.rollups]
+    return [
+      outcomes,
+      students,
+      outcomes_results,
+      alignments,
+      outcomePaths,
+      page,
+      page_count,
+      data.rollups
+    ]
   })
 }
