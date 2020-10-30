@@ -142,7 +142,12 @@ module Outcomes
           next unless score.score
           outcome = score.outcome
           next unless outcome
-          ratings = outcome.rubric_criterion[:ratings]
+          if outcome.context_id && outcome.context.root_account.feature_enabled?(:account_level_mastery_scales) && outcome.context.resolved_outcome_proficiency
+            proficiency = outcome.context.resolved_outcome_proficiency
+            ratings = proficiency.ratings_hash
+          else
+            ratings = outcome.rubric_criterion[:ratings]
+          end
           next unless ratings
           counts[outcome.id] = Array.new(ratings.length, 0) unless counts[outcome.id]
           idx = ratings.find_index { |rating| rating[:points] <= score.score }

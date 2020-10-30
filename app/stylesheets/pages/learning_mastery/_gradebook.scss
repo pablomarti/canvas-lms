@@ -47,6 +47,11 @@ a#accessibility_warning {
   overflow-x: scroll;
 }
 
+#stuck-header {
+  border-left: 1px solid #BDBDBD;
+  border-top: 1px solid #BDBDBD;
+}
+
 .sticky-header {
   display: flex;
   width: 100%;
@@ -55,7 +60,8 @@ a#accessibility_warning {
 }
 
 .outcome-column-header {
-  font-size: 12px;
+  font-weight: bold;
+  font-size: 16px;
   position: absolute;
   bottom: 0;
   text-align: center;
@@ -76,6 +82,7 @@ a#accessibility_warning {
   position: absolute;
   right: 0;
   bottom: 0;
+  top: 25%;
 }
 
 .row {
@@ -88,9 +95,13 @@ a#accessibility_warning {
   padding-left: 100px;
 }
 
+.average-cell {
+  padding-left: 12px;
+  padding-top:12px;
+}
+
 .cell {
   height: 40px;
-  text-overflow: ellipsis;
   text-overflow: ellipsis;
   border-bottom: 1px solid #BDBDBD;
   border-right: 1px solid #BDBDBD;
@@ -101,9 +112,10 @@ a#accessibility_warning {
   white-space: nowrap;
   overflow: hidden;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   height: 100%;
+  color: #008EE2;
 }
 
 .score {
@@ -123,7 +135,7 @@ a#accessibility_warning {
 }
 
 .nav {
-  height: 600px;
+  height: 660px;
   box-sizing: border-box;
   min-width: 135px;
   overflow-y: scroll;
@@ -137,8 +149,6 @@ a#accessibility_warning {
 
 .mainWrapper {
   overflow: scroll;
-  height: 600px;
-  width: 600px;
 }
 
 #stuck-header {

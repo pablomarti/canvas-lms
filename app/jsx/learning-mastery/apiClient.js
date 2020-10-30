@@ -18,11 +18,9 @@
 import axios from 'axios'
 
 const rollupsUrl = (course, exclude, page, sortField, sortAsc) => {
-  const excluding = ''
   const sectionParam = ''
   let sortParams = ''
   let sortOutcomeId = ''
-  console.log(sortField)
   if (sortField) {
     if (sortField.startsWith('outcome')) {
       ;[sortField, sortOutcomeId] = sortField.split('_')
@@ -34,12 +32,14 @@ const rollupsUrl = (course, exclude, page, sortField, sortAsc) => {
     if (!sortAsc) {
       sortParams = `${sortParams}&sort_order=desc`
     }
+  } else {
+    sortParams = `&sort_by=student`
   }
-  return `/api/v1/courses/${course}/outcome_rollups?rating_percents=true&per_page=20&include[]=outcomes&include[]=users&include[]=outcome_paths&include[]=submissions${excluding}&page=${page}${sortParams}${sectionParam}`
+  return `/api/v1/courses/${course}/outcome_rollups?rating_percents=true&per_page=20&include[]=outcomes&include[]=users&include[]=outcome_paths&include[]=submissions${exclude}&page=${page}${sortParams}${sectionParam}`
 }
 
-export const loadRollups = (page = 1, sortField = '', sortAsc = '') => {
-  const exclude = ''
+export const loadRollups = (page = 1, sortField = '', sortAsc = '', excludeMissingResults) => {
+  const exclude = excludeMissingResults ? '&exclude[]=missing_user_rollups' : ''
   const course = ENV.context_asset_string.split('_')[1]
   const url = rollupsUrl(course, exclude, page, sortField, sortAsc)
   return axios.get(url).then(({data}) => {

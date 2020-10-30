@@ -15,26 +15,42 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import axios from 'axios'
-import I18n from 'i18n!GradebookGrid'
+
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
-import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
-import $ from 'jquery'
+import {IconArrowDownSolid, IconArrowUpSolid} from '@instructure/ui-icons'
 
 class OutcomeAverageCell extends React.Component {
   static defaultProps = {
     scores: [],
     onClick: () => {},
-    size: ''
+    size: '',
+    outcome: {},
+    isReversed: false
+  }
+
+  renderBox = (width, color) => {
+    return <div className="box" style={{width, background: `#${color}`, marginRight: '2px'}} />
+  }
+
+  renderBoxes = () => {
+    const {outcome, isReversed} = this.props
+    const ratings = outcome?.ratings || []
+    return (isReversed ? [...ratings].reverse() : ratings).map(rating => {
+      if (rating?.percent?.length > 0 && rating.percent[0] > 0) {
+        const width = (rating.percent[0] / 100.0) * 250
+        return this.renderBox(width, rating.color)
+      }
+    })
   }
 
   render() {
     return (
       <Flex.Item size={this.props.size}>
-        <div className="cell header-cell" onClick={this.props.onClick}>
-          <div className="box" style={{width: '25px', background: 'blue'}}>
-            {' '}
+        <div className="cell average-cell" onClick={this.props.onClick}>
+          {this.renderBoxes()}
+          <div style={{marginTop: '-4px', textAlign: 'center'}}>
+            {this.props.isReversed ? <IconArrowDownSolid /> : <IconArrowUpSolid />}
           </div>
         </div>
       </Flex.Item>

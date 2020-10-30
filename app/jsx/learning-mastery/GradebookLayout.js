@@ -30,7 +30,7 @@ class GradebookLayout extends React.Component {
     const ratings = [
       ...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
       {points: null, mastery: false, description: 'Not Assessed'}
-    ].map((r, i) => ({...r, checked: true, onClick: () => this.changeFilter(i)}))
+    ].map((r, i) => ({...r, checked: true, onClick: () => this.excludeMissingResults(i)}))
 
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
@@ -46,9 +46,10 @@ class GradebookLayout extends React.Component {
     this.loadPage(1)
   }
 
-  loadPage = (pageNum = 1, sortField = null, sortAsc = null) => {
+  loadPage = (pageNum = 1, {excludeMissingResults = ''} = {}) => {
+    const {sortField, sortAsc} = this.state
     apiClient
-      .loadRollups(pageNum, sortField, sortAsc)
+      .loadRollups(pageNum, sortField, sortAsc, excludeMissingResults)
       .then(([outcomes, students, submissions, paths, page, page_count, rollups]) => {
         this.setState({
           loadedOutcomes: true,
@@ -76,24 +77,11 @@ class GradebookLayout extends React.Component {
     )
   }
 
-  changeFilter(i) {
-    const outcomes = this.state.outcomes
+  excludeMissingResults = i => {
     const ratings = [...this.state.ratings]
-    const rollups = [...this.state.rollups]
-
     ratings[i].checked = !ratings[i].checked
-
-    rollups.forEach(r => {
-      outcomes.forEach(o => {
-        if (r['outcome_' + o.id].rating.points === ratings[i].points) {
-          r['outcome_' + o.id].checked = ratings[i].checked
-        }
-      })
-    })
-
-    this.setState({
-      ratings,
-      rollups
+    this.setState({ratings}, () => {
+      this.loadPage(1, {excludeMissingResults: !ratings[i].checked})
     })
   }
 
@@ -106,8 +94,11 @@ class GradebookLayout extends React.Component {
 
     rollups.forEach(r => {
       outcomes.forEach(o => {
-        if (r['outcome_' + o.id].rating.points === ratings[i].points) {
-          r['outcome_' + o.id].checked = ratings[i].checked
+        console.log(r)
+        if (`outcome_${o.id}` in r) {
+          if (r[`outcome_${o.id}`].rating.points === ratings[i].points) {
+            r[`outcome_${o.id}`].checked = ratings[i].checked
+          }
         }
       })
     })

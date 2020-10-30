@@ -15,12 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import axios from 'axios'
-import I18n from 'i18n!GradebookGrid'
 import React from 'react'
-import {Flex} from '@instructure/ui-flex'
 import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
-import $ from 'jquery'
+import {IconArrowEndSolid, IconArrowStartSolid} from '@instructure/ui-icons'
 
 class OutcomeHeader extends React.Component {
   constructor(props) {
@@ -30,25 +27,26 @@ class OutcomeHeader extends React.Component {
   }
 
   static defaultProps = {
-    outcome: {}
+    outcome: {},
+    isExpanded: false
   }
 
-  // componentDidMount() {
-  //   const {outcome} = this.props
-  //   this.view = new OutcomeColumnView({
-  //     el: this.outcomeRef.current,
-  //     attributes: outcome,
-  //     totalsFn: () => {}
-  //   })
-  //   this.view.render()
-  // }
+  componentDidMount() {
+    const {outcome} = this.props
+    this.view = new OutcomeColumnView({
+      el: this.outcomeRef.current,
+      attributes: outcome,
+      totalsFn: () => {}
+    })
+    this.view.render()
+  }
 
-  // componentWillUnmount() {
-  //   this.view.remove()
-  // }
+  componentWillUnmount() {
+    this.view.remove()
+  }
 
   render() {
-    const {outcome, onExpandOutcome} = this.props
+    const {outcome, onExpandOutcome, isExpanded} = this.props
 
     return (
       <>
@@ -56,7 +54,7 @@ class OutcomeHeader extends React.Component {
           {outcome.title}
         </div>
         <div className="outcome-header-arrow" onClick={() => onExpandOutcome(outcome.id)}>
-          {outcome.expanded ? '<-' : '->'}
+          {isExpanded ? <IconArrowEndSolid /> : <IconArrowStartSolid />}
         </div>
         {/* TODO: make this an IconButton from instui */}
       </>
