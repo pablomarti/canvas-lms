@@ -103,7 +103,7 @@ export default class LearningMastery {
     if (ENV.GRADEBOOK_OPTIONS.IMPROVED_LMGB) {
       this._renderGradebookMenu()
       this.renderImprovedLMGB()
-      this.renderPagination()
+      // this.renderPagination()
     } else {
       this.view.render()
       this._renderGradebookMenu()

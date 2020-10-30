@@ -15,22 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import axios from 'axios'
-import I18n from 'i18n!GradebookGrid'
+
 import React from 'react'
 import {Flex} from '@instructure/ui-flex'
-import {getIconClass} from '../outcomes/ColumnTooltip'
-import OutcomeColumnView from 'compiled/views/gradebook/OutcomeColumnView'
 import OutcomeHeader from './OutcomeHeader'
+import StudentCell from './StudentCell'
+import OutcomeAverageCell from './OutcomeAverageCell'
 import $ from 'jquery'
+import {getIconClass} from '../outcomes/ColumnTooltip'
 
 class LearningMasteryGradebook extends React.Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      expandedOutcomes: {}
-    }
   }
 
   static defaultProps = {
@@ -47,6 +43,7 @@ class LearningMasteryGradebook extends React.Component {
       {id: 10, title: 'outcome_10', expanded: false}
     ],
     students: [],
+    setSortOrder: () => {},
     alignments: [{alignment: 'Quiz'}, {alignment: 'Assignment'}],
     rollups: []
   }
@@ -65,11 +62,18 @@ class LearningMasteryGradebook extends React.Component {
     return this.props.alignments
   }
 
+  toggleSort = newSortField => {
+    const {sortField, sortAsc, setSortOrder} = this.props
+    sortField === newSortField
+      ? setSortOrder(sortField, !sortAsc)
+      : setSortOrder(newSortField, true)
+  }
+
   renderOutcomeRow = () => {
     const {outcomes} = this.props
     return (
-      <Flex direction="row" withVisualDebug padding="0 0 large 0" width="600px">
-        <div id="stuck-header">
+      <Flex direction="row">
+        <div className="sticky-header" id="stuck-header">
           {outcomes.map(outcome => {
             return (
               <Flex.Item size={this.outcomeCellWidth(outcome)}>
@@ -88,14 +92,16 @@ class LearningMasteryGradebook extends React.Component {
     const rollups = this.props.rollups
     const rollup = rollups.find(r => r.student === student)
     const outcome_rollup = rollup['outcome_' + outcome.id]
-    const icon = getIconClass(outcome_rollup.rating.points, outcome.mastery_points)
-
+    let icon
+    icon = outcome_rollup
+      ? getIconClass(outcome_rollup?.rating?.points, outcome.mastery_points)
+      : getIconClass(undefined)
     return (
       <div
         className="outcome-proficiency-dot"
         style={{
-          backgroundColor: '#' + outcome_rollup.rating.color,
-          opacity: outcome_rollup.checked ? 1 : 0.3
+          backgroundColor: '#' + outcome_rollup?.rating.color,
+          opacity: outcome_rollup?.checked ? 1 : 0.3
         }}
       >
         <div className={icon} />
@@ -127,7 +133,24 @@ class LearningMasteryGradebook extends React.Component {
     return <Flex direction="row">{scores}</Flex>
   }
 
-  renderScores = () => {
+  renderAlignments(student, outcome) {
+    if (outcome.expanded) {
+      return (
+        <>
+          <Flex.Item size="100px">
+            <div className="cell">small</div>
+          </Flex.Item>
+          <Flex.Item size="100px">
+            <div className="cell">small</div>
+          </Flex.Item>
+        </>
+      )
+    }
+
+    return <></>
+  }
+
+  renderScoresGrid = () => {
     const {students} = this.props
     const scores = students.map(student => {
       return this.renderStudentScores(student)
@@ -141,22 +164,12 @@ class LearningMasteryGradebook extends React.Component {
 
   renderStudent = () => {
     const {students, outcomes} = this.props
-    const scores = students.map(student => {
-      return this.renderStudentScores()
-    })
-    return (
-      <Flex direction="column" withVisualDebug>
-        {scores}
-      </Flex>
-    )
-  }
-
-  renderStudent = () => {
-    const {students, outcomes} = this.props
     return students.map(student => {
       return (
         <div className="cell">
-          <div className="name">{student.name}</div>
+          <div className="name">
+            <StudentCell user={student} courseId={ENV.context_asset_string.split('_')[1]} />
+          </div>
         </div>
       )
     })
@@ -165,7 +178,6 @@ class LearningMasteryGradebook extends React.Component {
   handleScrollCells = e => {
     $('#stuck-header')[0].scrollLeft = e.target.scrollLeft
     $('#averages-row')[0].scrollLeft = e.target.scrollLeft
-
     $('#user-list')[0].scrollTop = e.target.scrollTop
   }
 
@@ -196,28 +208,37 @@ class LearningMasteryGradebook extends React.Component {
   renderGradebook = () => {
     return (
       <>
-        <div className="table-header-row">
-          <Flex height="40px" direction="column">
-            <Flex.Item
-              as="header"
-              size="40px"
-              overflowX="hidden"
-              overflowY="hidden"
-              onScroll={this.handleOutcomeScroll}
-            >
-              {this.renderOutcomeRow()}
-            </Flex.Item>
-          </Flex>
-          <div style={{height: '40px', width: '600px', overflow: 'hidden'}}>
+        <div>
+          <div
+            style={{
+              borderBottom: '1px solid #BDBDBD',
+              height: '40px',
+              paddingLeft: '135px',
+              overflow: 'hidden',
+              maxWidth: '600px'
+            }}
+            onScroll={this.handleOutcomeScroll}
+          >
+            {this.renderOutcomeRow()}
+          </div>
+          <div
+            style={{
+              height: '40px',
+              overflow: 'hidden',
+              borderBottom: '1px solid #BDBDBD',
+              maxWidth: '735px'
+            }}
+          >
             {this.renderHeaderRow()}
           </div>
         </div>
+
         <div className="wrapper">
           <div className="nav" id="user-list" onScroll={this.handleStudentScroll}>
             {this.renderStudent()}
           </div>
           <div className="mainWrapper" id="scores" onScroll={this.handleScrollCells}>
-            {this.renderScores()}
+            {this.renderScoresGrid()}
           </div>
         </div>
       </>
@@ -225,23 +246,26 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderHeaderRow = () => {
-    const {outcomes, students} = this.props
-
+    const {outcomes} = this.props
     return (
-      <Flex direction="row" withVisualDebug width="600px">
-        <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
-          {outcomes.map(outcome => {
-            return (
-              <Flex.Item size={this.outcomeCellWidth(outcome)}>
-                <div className="cell header-cell">
-                  <div className="outcome-column-header">{outcome.title}</div>{' '}
-                  {/* TODO: Replace with averages */}
-                </div>
-              </Flex.Item>
-            )
-          })}
+      <>
+        <div style={{height: '40px', width: '135px', float: 'left'}}>
+          <div className="cell header-cell">
+            <div className="outcome-column-header">Students</div>
+          </div>
         </div>
-      </Flex>
+        <Flex direction="row">
+          <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
+            {outcomes.map(outcome => (
+              <OutcomeAverageCell
+                size={this.outcomeCellWidth(outcome)}
+                scores={[]}
+                onClick={() => this.toggleSort(`outcome_${outcome.id}`)}
+              />
+            ))}
+          </div>
+        </Flex>
+      </>
     )
   }
 

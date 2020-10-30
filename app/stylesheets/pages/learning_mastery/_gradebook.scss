@@ -23,6 +23,17 @@ a#accessibility_warning {
   @include fontSize(14px);
 }
 
+.box {
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 18px;
+  float: left;
+  min-height: 18px;
+  padding: 0;
+  width: 18px;
+}
+
 .header-cell {
   position: relative;
 }
@@ -73,10 +84,8 @@ a#accessibility_warning {
   border-bottom: 1px solid #BDBDBD;
 }
 
-.table-header-row {
-  padding-left: 135px;
-  border-bottom: 1px solid #BDBDBD;
-
+.header {
+  padding-left: 100px;
 }
 
 .cell {
@@ -127,10 +136,9 @@ a#accessibility_warning {
 }
 
 .mainWrapper {
-  width: 600px;
   overflow: scroll;
-  // background: #f0f0f0;
   height: 600px;
+  width: 600px;
 }
 
 #stuck-header {

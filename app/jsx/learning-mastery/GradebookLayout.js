@@ -19,6 +19,7 @@ import I18n from 'i18n!GradebookGrid'
 import React from 'react'
 import * as apiClient from './apiClient'
 import LearningMasteryGradebook from './LearningMasteryGradebook'
+import Paginator from '../shared/components/Paginator'
 import ProficiencyFilter from './ProficiencyFilter'
 import Rollups from './Rollups'
 
@@ -33,19 +34,65 @@ class GradebookLayout extends React.Component {
 
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
+      page: 0,
+      pageCount: 10,
+      sortAsc: true,
+      sortField: '',
       ratings
     }
   }
 
   async componentDidMount() {
-    apiClient.loadRollups().then(([outcomes, students, paths, rollups]) => {
-      this.setState({
-        loadedOutcomes: true,
-        rollups: Rollups(rollups, students, outcomes),
-        outcomes,
-        students,
-        paths
+    this.loadPage(1)
+  }
+
+  loadPage = (pageNum = 1, sortField = null, sortAsc = null) => {
+    apiClient
+      .loadRollups(pageNum, sortField, sortAsc)
+      .then(([outcomes, students, paths, page, page_count, rollups]) => {
+        this.setState({
+          loadedOutcomes: true,
+          rollups: Rollups(rollups, students, outcomes),
+          outcomes,
+          students,
+          paths,
+          page,
+          pageCount: page_count
+        })
       })
+  }
+
+  handleSetSortOrder = (sortField, sortAsc) => {
+    this.setState(
+      {
+        loadedOutcomes: false,
+        sortField,
+        sortAsc
+      },
+      () => {
+        this.loadPage(1, sortField, sortAsc)
+      }
+    )
+  }
+
+  changeFilter(i) {
+    const outcomes = this.state.outcomes
+    const ratings = [...this.state.ratings]
+    const rollups = [...this.state.rollups]
+
+    ratings[i].checked = !ratings[i].checked
+
+    rollups.forEach(r => {
+      outcomes.forEach(o => {
+        if (r['outcome_' + o.id].rating.points === ratings[i].points) {
+          r['outcome_' + o.id].checked = ratings[i].checked
+        }
+      })
+    })
+
+    this.setState({
+      ratings,
+      rollups
     })
   }
 
@@ -71,7 +118,16 @@ class GradebookLayout extends React.Component {
   }
 
   render() {
-    const {outcomes, loadedOutcomes, students, rollups} = this.state
+    const {
+      loadedOutcomes,
+      students,
+      outcomes,
+      page,
+      pageCount,
+      sortField,
+      sortAsc,
+      rollups
+    } = this.state
     if (!loadedOutcomes) {
       return ''
     }
@@ -79,7 +135,20 @@ class GradebookLayout extends React.Component {
     return (
       <div>
         <ProficiencyFilter ratings={this.state.ratings} />
-        <LearningMasteryGradebook outcomes={outcomes} students={students} rollups={rollups} />
+        <LearningMasteryGradebook
+          students={students}
+          outcomes={outcomes}
+          setSortOrder={this.handleSetSortOrder}
+          sortField={sortField}
+          sortAsc={sortAsc}
+          rollups={rollups}
+        />
+        <Paginator
+          loadPage={this.loadPage}
+          page={page}
+          pageCount={pageCount}
+          margin="small 0 0 0"
+        />
       </div>
     )
   }
