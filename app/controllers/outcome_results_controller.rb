@@ -455,10 +455,10 @@ class OutcomeResultsController < ApplicationController
     outcome_results_assignments_json(assignments)
   end
 
-  def include_submissions
+  def include_outcomes_results
     assignments = @results.map { |result| result.assignment || result.alignment&.content }
-    submissions = Submission.where(assignment: assignments, user: @users)
-    outcome_results_include_submissions_json(submissions)
+    learning_outcome_results = LearningOutcomeResult.where(user: @users)
+    outcome_results_include_outcomes_results_json(learning_outcome_results)
   end
 
   def require_outcome_context
