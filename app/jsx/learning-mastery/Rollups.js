@@ -16,24 +16,25 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function loadRow(rollups_group, students, outcomes) {
+function loadRow(rollups_group, students, outcomes, outcomes_results) {
   const rollup = rollups_group[0]
 
   const user = rollup.links.user
   const student = students.find(s => s.id === user)
-  const row = {student}
+  const student_outcomes_results = outcomes_results.filter(r => r.user_id === user).map(r => {
+    const result = {...r}
+    const outcome = outcomes.find(o => o.id === result.outcome_id)
+    const ratings = outcome.ratings
+    result['rating'] = ratings.find((r, i) => loadRating(ratings, result.score, r, i))
+    return result
+  })
+  const row = {student, student_outcomes_results}
 
   rollup.scores.forEach(s => {
     const score = s.score
     const outcome = outcomes.find(o => o.id === s.links.outcome)
     const ratings = outcome.ratings
-    const rating = ratings.find((r, i) => {
-      return (
-        r.points == score ||
-        (i == 0 && r.points < score) ||
-        (r.points < score && ratings[i - 1].points > score)
-      )
-    })
+    const rating = ratings.find((r, i) => loadRating(ratings, score, r, i))
 
     row[`outcome_${outcome.id}`] = {
       score: s.score,
@@ -46,7 +47,15 @@ function loadRow(rollups_group, students, outcomes) {
   return row
 }
 
-export default function Rollups(rollups, students, outcomes) {
+function loadRating(ratings, score, r, i) {
+  return (
+    r.points == score ||
+    (i == 0 && r.points < score) ||
+    (r.points < score && ratings[i - 1].points > score)
+  )
+}
+
+export default function Rollups(rollups, students, outcomes, outcomes_results) {
   const user_ids = [...new Set(rollups.map(r => r.links.user))]
 
   const filtered_rollups = rollups.reduce((r, a) => {
@@ -56,5 +65,5 @@ export default function Rollups(rollups, students, outcomes) {
 
   const ordered_rollups = user_ids.map(u => filtered_rollups[u])
 
-  return ordered_rollups.map(r => loadRow(r, students, outcomes)).filter(r => r !== null)
+  return ordered_rollups.map(r => loadRow(r, students, outcomes, outcomes_results)).filter(r => r !== null)
 }
