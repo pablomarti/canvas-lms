@@ -119,10 +119,10 @@ class LearningMasteryGradebook extends React.Component {
     }
 
     return this.outcomeAlignments(outcome).map(a => {
-      const submission = this.props.submissions.find(
+      const outcomes_result = this.props.outcomes_results.find(
         s => s.user_id === student.id && s.assignment_id === a
       )
-      const score = submission?.score || 0
+      const score = outcomes_result?.score || 0
 
       return (
         <Flex.Item size="100px">
