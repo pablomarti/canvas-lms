@@ -455,6 +455,12 @@ class OutcomeResultsController < ApplicationController
     outcome_results_assignments_json(assignments)
   end
 
+  def include_submissions
+    assignments = @results.map { |result| result.assignment || result.alignment&.content }
+    submissions = Submission.where(assignment: assignments, user: @users)
+    outcome_results_include_submissions_json(submissions)
+  end
+
   def require_outcome_context
     reject! "invalid context type" unless @context.is_a?(Course)
 

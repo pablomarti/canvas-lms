@@ -137,6 +137,11 @@ module Api::V1::OutcomeResults
     end
   end
 
+  # Public: Returns an Array of serialized Submission objects for the linked hash.
+  def outcome_results_include_submissions_json(submissions)
+    submissions.map { |s| { id: s.id, user_id: s.user_id.to_s, score: s.score, assignment_id: s.assignment.asset_string } }
+  end
+
   # Public: Serializes the aggregate rollup. Uses the specified context for the
   # id and name fields.
   def aggregate_outcome_results_rollups_json(rollups)
