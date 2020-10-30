@@ -294,9 +294,7 @@ class LearningMasteryGradebook extends React.Component {
               let alignments
 
               if (outcome.expanded) {
-                alignments = outcome.alignments
-                  ?.filter(a => a.indexOf('rubric_') === -1)
-                  ?.map(a => (
+                alignments = this.outcomeAlignments(outcome).map(a => (
                     <Flex.Item size="100px">
                       {this.props.alignments.find(al => al.id == a)?.name}
                     </Flex.Item>

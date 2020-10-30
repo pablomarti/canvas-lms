@@ -30,8 +30,8 @@ function loadRow(rollups_group, students, outcomes, outcomes_results) {
       result.rating = ratings.find((r, i) => loadRating(ratings, result.score, r, i))
       return result
     })
-  const row = {student, student_outcomes_results}
 
+  const row = {student, student_outcomes_results}
   rollup.scores.forEach(s => {
     const score = s.score
     const outcome = outcomes.find(o => o.id === s.links.outcome)
