@@ -49,12 +49,13 @@ class GradebookLayout extends React.Component {
   loadPage = (pageNum = 1, sortField = null, sortAsc = null) => {
     apiClient
       .loadRollups(pageNum, sortField, sortAsc)
-      .then(([outcomes, students, paths, page, page_count, rollups]) => {
+      .then(([outcomes, students, submissions, paths, page, page_count, rollups]) => {
         this.setState({
           loadedOutcomes: true,
           rollups: Rollups(rollups, students, outcomes),
           outcomes,
           students,
+          submissions,
           paths,
           page,
           pageCount: page_count
@@ -122,6 +123,7 @@ class GradebookLayout extends React.Component {
       loadedOutcomes,
       students,
       outcomes,
+      submissions,
       page,
       pageCount,
       sortField,
@@ -138,6 +140,7 @@ class GradebookLayout extends React.Component {
         <LearningMasteryGradebook
           students={students}
           outcomes={outcomes}
+          submissions={submissions}
           setSortOrder={this.handleSetSortOrder}
           sortField={sortField}
           sortAsc={sortAsc}

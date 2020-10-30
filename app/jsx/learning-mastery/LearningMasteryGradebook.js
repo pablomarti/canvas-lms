@@ -30,22 +30,11 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   static defaultProps = {
-    outcomes: [
-      {id: 1, title: 'outcome_1', expanded: false},
-      {id: 2, title: 'outcome_2', expanded: false},
-      {id: 3, title: 'outcome_3', expanded: false},
-      {id: 4, title: 'outcome_4', expanded: false},
-      {id: 5, title: 'outcome_5', expanded: false},
-      {id: 6, title: 'outcome_6', expanded: false},
-      {id: 7, title: 'outcome_7', expanded: false},
-      {id: 8, title: 'outcome_8', expanded: false},
-      {id: 9, title: 'outcome_9', expanded: false},
-      {id: 10, title: 'outcome_10', expanded: false}
-    ],
+    outcomes: [],
     students: [],
+    alignments: [],
+    rollups: [],
     setSortOrder: () => {},
-    alignments: [{alignment: 'Quiz'}, {alignment: 'Assignment'}],
-    rollups: []
   }
 
   handleExpandedOutcome = outcomeId => {
@@ -58,8 +47,8 @@ class LearningMasteryGradebook extends React.Component {
     })
   }
 
-  outcomeAlignments = outcomeId => {
-    return this.props.alignments
+  outcomeAlignments = outcome => {
+    return outcome?.alignments?.filter(o => o.indexOf("rubric_") === -1) || []
   }
 
   toggleSort = newSortField => {
@@ -117,16 +106,7 @@ class LearningMasteryGradebook extends React.Component {
           <Flex.Item size="200px">
             <div className="cell">{this.renderScore(student, outcome)}</div>
           </Flex.Item>
-          {outcome.expanded ? (
-            <>
-              <Flex.Item size="100px">
-                <div className="cell">small</div>
-              </Flex.Item>
-              <Flex.Item size="100px">
-                <div className="cell">small</div>
-              </Flex.Item>
-            </>
-          ) : null}
+          {outcome.expanded ? this.renderAlignments(student, outcome) : null}
         </>
       )
     })
@@ -134,20 +114,20 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderAlignments(student, outcome) {
-    if (outcome.expanded) {
-      return (
-        <>
-          <Flex.Item size="100px">
-            <div className="cell">small</div>
-          </Flex.Item>
-          <Flex.Item size="100px">
-            <div className="cell">small</div>
-          </Flex.Item>
-        </>
-      )
+    if(!outcome.expanded) {
+      return null
     }
 
-    return <></>
+    return this.outcomeAlignments(outcome).map(a => {
+      const submission = this.props.submissions.find(s => s.user_id === student.id && s.assignment_id === a)
+      const score = submission?.score || 0
+  
+      return (
+        <Flex.Item size="100px">
+          <div className="cell">{score}</div>
+        </Flex.Item>
+      )
+    })
   }
 
   renderScoresGrid = () => {
@@ -200,7 +180,7 @@ class LearningMasteryGradebook extends React.Component {
       return '200px'
     }
 
-    const alignments = this.outcomeAlignments(outcome.id)
+    const alignments = this.outcomeAlignments(outcome)
     const size = 200 + 100 * alignments.length
     return size + 'px'
   }

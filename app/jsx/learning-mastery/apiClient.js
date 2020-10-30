@@ -35,7 +35,7 @@ const rollupsUrl = (course, exclude, page, sortField, sortAsc) => {
       sortParams = `${sortParams}&sort_order=desc`
     }
   }
-  return `/api/v1/courses/${course}/outcome_rollups?rating_percents=true&per_page=20&include[]=outcomes&include[]=users&include[]=outcome_paths${excluding}&page=${page}${sortParams}${sectionParam}`
+  return `/api/v1/courses/${course}/outcome_rollups?rating_percents=true&per_page=20&include[]=outcomes&include[]=users&include[]=outcome_paths&include[]=submissions${excluding}&page=${page}${sortParams}${sectionParam}`
 }
 
 export const loadRollups = (page = 1, sortField = '', sortAsc = '') => {
@@ -47,7 +47,8 @@ export const loadRollups = (page = 1, sortField = '', sortAsc = '') => {
     const outcomes = data.linked.outcomes
     const students = data.linked.users
     const outcomePaths = data.linked.outcome_paths
+    const submissions = data.linked.submissions
     const {page, page_count} = data.meta.pagination
-    return [outcomes, students, outcomePaths, page, page_count, data.rollups]
+    return [outcomes, students, submissions, outcomePaths, page, page_count, data.rollups]
   })
 }
