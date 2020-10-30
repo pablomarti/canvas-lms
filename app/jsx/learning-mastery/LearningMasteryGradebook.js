@@ -95,10 +95,16 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  renderScore = (student, outcome) => {
+  loadRollup = (student) => {
     const rollups = this.props.rollups
     const rollup = rollups.find(r => r.student === student)
+    return rollup
+  }
+
+  renderScore = (student, outcome) => {
+    const rollup = this.loadRollup(student, outcome)
     const outcome_rollup = rollup['outcome_' + outcome.id]
+
     let icon
     icon = outcome_rollup
       ? getIconClass(outcome_rollup?.rating?.points, outcome.mastery_points)
@@ -137,15 +143,35 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderAlignments(student, outcome) {
+    if (!outcome.expanded) {
+      return null
+    }
+
+    const rollup = this.loadRollup(student)
+
     return this.outcomeAlignments(outcome).map(a => {
-      const outcomes_result = this.props.outcomes_results.find(
-        s => s.user_id === student.id && s.assignment_id === a
-      )
+      const outcomes_result = rollup?.student_outcomes_results?.find(r => r.assignment_id === a) || null
+      const outcome_rollup = rollup['outcome_' + outcome.id]
       const score = outcomes_result?.score || 0
+
+      let icon
+      icon = outcome_rollup
+        ? getIconClass(score, outcome.mastery_points)
+        : getIconClass(undefined)
 
       return (
         <Flex.Item size="100px">
-          <div className="cell">{score}</div>
+          <div className="cell">
+            <div
+              className="outcome-proficiency-dot"
+              style={{
+                backgroundColor: '#' + outcomes_result?.rating.color,
+                opacity: outcome_rollup?.checked ? 1 : 0.3
+              }}
+            >
+              <div className={icon} />
+            </div>
+          </div>
         </Flex.Item>
       )
     })
@@ -265,14 +291,29 @@ class LearningMasteryGradebook extends React.Component {
         </div>
         <Flex direction="row">
           <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
-            {outcomes.map(outcome => (
-              <OutcomeAverageCell
-                size={this.outcomeCellWidth(outcome)}
-                outcome={outcome}
-                isReversed={`outcome_${outcome.id}` === sortField ? sortAsc : false}
-                onClick={() => this.toggleSort(`outcome_${outcome.id}`)}
-              />
-            ))}
+            {outcomes.map(outcome => {
+              let alignments
+
+              if (outcome.expanded) {
+                alignments = outcome.alignments?.filter(a => a.indexOf('rubric_') === -1)?.map(a => (
+                  <Flex.Item size='100px'>
+                    {this.props.alignments.find(al => al.id == a)?.name}
+                  </Flex.Item>
+                ))
+              }
+
+              return (
+                <>
+                  <OutcomeAverageCell
+                    size='200px'
+                    outcome={outcome}
+                    isReversed={`outcome_${outcome.id}` === sortField ? sortAsc : false}
+                    onClick={() => this.toggleSort(`outcome_${outcome.id}`)}
+                  />
+                  {alignments}
+                </>
+              )
+            })}
           </div>
         </Flex>
       </>
