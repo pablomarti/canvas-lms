@@ -161,7 +161,7 @@ class LearningMasteryGradebook extends React.Component {
               className="outcome-proficiency-dot"
               style={{
                 backgroundColor: outcomes_result?.rating?.color
-                  ? outcomes_result?.rating.color
+                  ? `#${outcomes_result?.rating.color}`
                   : `#FFFFFF`,
                 opacity: outcome_rollup?.checked ? 1 : 0.3
               }}

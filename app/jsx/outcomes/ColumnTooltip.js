@@ -80,7 +80,6 @@ const Ratings = ({envRatings, percents}) => {
 }
 
 export const getIconClass = (points, masteryAt) => {
-  console.log(typeof points)
   if (typeof points === 'undefined') {
     return 'not-assessed'
   }
