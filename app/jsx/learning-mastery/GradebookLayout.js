@@ -30,7 +30,7 @@ class GradebookLayout extends React.Component {
     const ratings = [
       ...ENV.GRADEBOOK_OPTIONS.outcome_proficiency.ratings,
       {points: null, mastery: false, description: 'Not Assessed'}
-    ].map((r, i) => ({...r, checked: true, onClick: () => this.excludeMissingResults(i)}))
+    ].map((r, i) => ({...r, checked: true, onClick: () => this.changeFilter(i)}))
 
     this.state = {
       loadedOutcomes: false, // TODO: render loader when no outcomes
@@ -77,24 +77,23 @@ class GradebookLayout extends React.Component {
     )
   }
 
-  excludeMissingResults = i => {
-    const ratings = [...this.state.ratings]
-    ratings[i].checked = !ratings[i].checked
-    this.setState({ratings}, () => {
-      this.loadPage(1, {excludeMissingResults: !ratings[i].checked})
-    })
-  }
-
   changeFilter(i) {
-    const outcomes = this.state.outcomes
     const ratings = [...this.state.ratings]
-    const rollups = [...this.state.rollups]
-
     ratings[i].checked = !ratings[i].checked
+
+    if (i == ratings.length - 1) {
+      this.setState({ratings}, () => {
+        this.loadPage(1, {excludeMissingResults: !ratings[i].checked})
+      })
+
+      return null
+    }
+
+    const outcomes = this.state.outcomes
+    const rollups = [...this.state.rollups]
 
     rollups.forEach(r => {
       outcomes.forEach(o => {
-        console.log(r)
         if (`outcome_${o.id}` in r) {
           if (r[`outcome_${o.id}`].rating.points === ratings[i].points) {
             r[`outcome_${o.id}`].checked = ratings[i].checked

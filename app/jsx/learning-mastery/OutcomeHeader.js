@@ -54,7 +54,7 @@ class OutcomeHeader extends React.Component {
           {outcome.title}
         </div>
         <div className="outcome-header-arrow" onClick={() => onExpandOutcome(outcome.id)}>
-          {isExpanded ? <IconArrowEndSolid /> : <IconArrowStartSolid />}
+          {isExpanded ? <IconArrowStartSolid /> : <IconArrowEndSolid />}
         </div>
         {/* TODO: make this an IconButton from instui */}
       </>
