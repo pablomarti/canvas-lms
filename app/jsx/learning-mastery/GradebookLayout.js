@@ -50,18 +50,20 @@ class GradebookLayout extends React.Component {
     const {sortField, sortAsc} = this.state
     apiClient
       .loadRollups(pageNum, sortField, sortAsc, excludeMissingResults)
-      .then(([outcomes, students, outcomes_results, alignments, paths, page, page_count, rollups]) => {
-        this.setState({
-          loadedOutcomes: true,
-          rollups: Rollups(rollups, students, outcomes, outcomes_results),
-          outcomes,
-          students,
-          alignments,
-          paths,
-          page,
-          pageCount: page_count
-        })
-      })
+      .then(
+        ([outcomes, students, outcomes_results, alignments, paths, page, page_count, rollups]) => {
+          this.setState({
+            loadedOutcomes: true,
+            rollups: Rollups(rollups, students, outcomes, outcomes_results),
+            outcomes,
+            students,
+            alignments,
+            paths,
+            page,
+            pageCount: page_count
+          })
+        }
+      )
   }
 
   handleSetSortOrder = (sortField, sortAsc) => {
