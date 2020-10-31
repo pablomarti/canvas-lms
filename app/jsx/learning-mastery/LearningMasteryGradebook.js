@@ -154,15 +154,17 @@ class LearningMasteryGradebook extends React.Component {
       let icon
       icon = outcome_rollup ? getIconClass(score, outcome.mastery_points) : getIconClass(undefined)
 
+      console.log("coloooor: ", outcomes_result?.rating?.color)
+      const backgroundColor = `${outcomes_result?.rating?.color}` || `FFFFFF`
+      console.log(backgroundColor)
+
       return (
         <Flex.Item size="100px">
           <div className="cell">
             <div
               className="outcome-proficiency-dot"
               style={{
-                backgroundColor: outcomes_result?.rating?.color
-                  ? `#${outcomes_result?.rating.color}`
-                  : `#FFFFFF`,
+                backgroundColor: '#' + backgroundColor,
                 opacity: outcome_rollup?.checked ? 1 : 0.3
               }}
             >
