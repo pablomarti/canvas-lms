@@ -44,6 +44,7 @@ export const loadRollups = (page = 1, sortField = '', sortAsc = '', excludeMissi
   const url = rollupsUrl(course, exclude, page, sortField, sortAsc)
   return axios.get(url).then(({data}) => {
     const outcomes = data.linked.outcomes
+    console.log(outcomes)
     const students = data.linked.users
     const outcomePaths = data.linked.outcome_paths
     const outcomes_results = data.linked.outcomes_results

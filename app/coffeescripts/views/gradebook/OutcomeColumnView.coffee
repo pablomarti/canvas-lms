@@ -66,19 +66,19 @@ export default class OutcomeColumnView extends View
       , @TIMEOUT_LENGTH
 
     pickColors: ->
-      data = @attributes.ratings
-      return unless data
-      last = data.length - 1
-      mastery = @attributes.mastery_points
-      mastery_pos = data.indexOf(
-        _.find(data,
-          (x) -> x.points == mastery
-        )
-      )
-      color = d3.scale.linear()
-        .domain([0, mastery_pos, (mastery_pos + last)/ 2, last])
-        .range(["#416929", "#8bab58", "#e0d670", "#dd5c5c"])
-      _.each(data, (rating, i) -> rating.color = color(i))
+      # data = @attributes.ratings
+      # return unless data
+      # last = data.length - 1
+      # mastery = @attributes.mastery_points
+      # mastery_pos = data.indexOf(
+      #   _.find(data,
+      #     (x) -> x.points == mastery
+      #   )
+      # )
+      # color = d3.scale.linear()
+      #   .domain([0, mastery_pos, (mastery_pos + last)/ 2, last])
+      #   .range(["#416929", "#8bab58", "#e0d670", "#dd5c5c"])
+      # _.each(data, (rating, i) -> rating.color = color(i))
 
     renderChart: ->
       @data = _.filter(@attributes.ratings, (rating) -> rating.percent)

@@ -47,7 +47,7 @@ class OutcomeHeader extends React.Component {
 
   render() {
     const {outcome, onExpandOutcome, isExpanded} = this.props
-
+    console.log(outcome)
     return (
       <>
         <div className="outcome-column-header" ref={this.outcomeRef}>

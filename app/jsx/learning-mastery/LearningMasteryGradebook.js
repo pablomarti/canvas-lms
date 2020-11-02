@@ -34,16 +34,7 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   static defaultProps = {
-    outcomes: [
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'},
-      {title: 'wow'}
-    ],
+    outcomes: [],
     students: [],
     alignments: [],
     rollups: [],
@@ -59,7 +50,7 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   outcomeAlignments = outcome => {
-    return outcome?.alignments?.filter(o => o.indexOf('rubric_') === -1) || []
+    return outcome?.alignments?.filter(a => a.indexOf('rubric_') === -1) || []
   }
 
   toggleSort = newSortField => {
@@ -74,24 +65,29 @@ class LearningMasteryGradebook extends React.Component {
     const {expandedOutcomes} = this.state
 
     return (
-      <Flex direction="row">
-        <div className="sticky-header" id="stuck-header">
-          {outcomes.map(outcome => {
-            const isExpanded = expandedOutcomes[outcome.id]
-            return (
-              <Flex.Item size={this.outcomeCellWidth(outcome)}>
-                <div className="cell header-cell">
-                  <OutcomeHeader
-                    onExpandOutcome={this.handleExpandedOutcome}
-                    isExpanded={isExpanded}
-                    outcome={outcome}
-                  />
-                </div>
-              </Flex.Item>
-            )
-          })}
+      <>
+        <div style={{height: '40px', width: '135px', float: 'left'}}>
+          <div className="cell header-cell" />
         </div>
-      </Flex>
+        <Flex direction="row">
+          <div className="header-row" id="stuck-header">
+            {outcomes.map(outcome => {
+              const isExpanded = expandedOutcomes[outcome.id]
+              return (
+                <Flex.Item size={this.outcomeCellWidth(outcome)}>
+                  <div className="cell header-cell">
+                    <OutcomeHeader
+                      onExpandOutcome={this.handleExpandedOutcome}
+                      isExpanded={isExpanded}
+                      outcome={outcome}
+                    />
+                  </div>
+                </Flex.Item>
+              )
+            })}
+          </div>
+        </Flex>
+      </>
     )
   }
 
@@ -102,11 +98,10 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderScore = (student, outcome) => {
-    const rollup = this.loadRollup(student, outcome)
-    const outcome_rollup = rollup['outcome_' + outcome.id]
+    const rollup = this.loadRollup(student, outcome) || {}
+    const outcome_rollup = `outcome_${outcome.id}` in rollup ? rollup[`outcome_${outcome.id}`] : {}
 
-    let icon
-    icon = outcome_rollup
+    const icon = outcome_rollup
       ? getIconClass(outcome_rollup?.rating?.points, outcome.mastery_points)
       : getIconClass(undefined)
 
@@ -115,7 +110,7 @@ class LearningMasteryGradebook extends React.Component {
         <div
           className="outcome-proficiency-dot"
           style={{
-            backgroundColor: outcome_rollup ? '#' + outcome_rollup?.rating.color : '#FFFFFF',
+            backgroundColor: outcome_rollup ? '#' + outcome_rollup?.rating?.color : '#FFFFFF',
             opacity: outcome_rollup?.checked ? 1 : 0.3
           }}
         >
@@ -151,24 +146,30 @@ class LearningMasteryGradebook extends React.Component {
       const outcome_rollup = rollup['outcome_' + outcome.id]
       const score = outcomes_result?.score || 0
 
-      let icon
-      icon = outcome_rollup ? getIconClass(score, outcome.mastery_points) : getIconClass(undefined)
+      const icon = outcome_rollup
+        ? getIconClass(score, outcome.mastery_points)
+        : getIconClass(undefined)
+      const backgroundColor = `#${outcomes_result?.rating?.color}` || `#FFFFFF`
 
-      console.log("coloooor: ", outcomes_result?.rating?.color)
-      const backgroundColor = `${outcomes_result?.rating?.color}` || `FFFFFF`
+      console.log(icon)
+      console.log(student)
       console.log(backgroundColor)
-
+      console.log(outcome_rollup)
+      console.log(outcomes_result)
+      console.log('******')
       return (
-        <Flex.Item size="100px">
+        <Flex.Item size="200px">
           <div className="cell">
-            <div
-              className="outcome-proficiency-dot"
-              style={{
-                backgroundColor: '#' + backgroundColor,
-                opacity: outcome_rollup?.checked ? 1 : 0.3
-              }}
-            >
-              <div className={icon} />
+            <div className="score">
+              <div
+                className="outcome-proficiency-dot"
+                style={{
+                  backgroundColor,
+                  opacity: outcome_rollup?.checked ? 1 : 0.3
+                }}
+              >
+                <div className={icon} />
+              </div>
             </div>
           </div>
         </Flex.Item>
@@ -185,7 +186,7 @@ class LearningMasteryGradebook extends React.Component {
   }
 
   renderStudent = () => {
-    const {students, outcomes} = this.props
+    const {students} = this.props
     return students.map(student => {
       return (
         <div className="cell">
@@ -224,38 +225,47 @@ class LearningMasteryGradebook extends React.Component {
     }
 
     const alignments = this.outcomeAlignments(outcome)
-    const size = 200 + 100 * alignments.length
+    const size = 200 + 200 * alignments.length
     return size + 'px'
   }
 
   renderGradebook = () => {
+    const width = this.props.outcomes
+      .map(outcome => this.outcomeCellWidth(outcome))
+      .reduce((a, b) => {
+        return parseInt(a) + parseInt(b)
+      }, 0)
+
+    const headerRowStyles = {
+      height: '40px',
+      overflow: 'hidden'
+    }
+
     return (
       <>
         <div>
-          <div
-            style={{
-              borderBottom: '1px solid #BDBDBD',
-              height: '40px',
-              paddingLeft: '134px',
-              overflow: 'hidden',
-              maxWidth: '880px',
-              borderRight: '1px solid #BDBDBD',
-              width: this.props.outcomes.length * 300
-            }}
-            onScroll={this.handleOutcomeScroll}
-          >
-            {this.renderOutcomeRow()}
+          <div>
+            <div
+              style={{
+                ...headerRowStyles,
+                maxWidth: '1015px', // 880 + 135
+                width: width + 135
+              }}
+              onScroll={this.handleOutcomeScroll}
+            >
+              {this.renderOutcomeRow()}
+            </div>
           </div>
           <div
             style={{
-              height: '40px',
-              overflow: 'hidden',
-              borderBottom: '1px solid #BDBDBD',
               maxWidth: '1015px', // 880 + 135
-              width: this.props.outcomes.length * 300 + 135
+              width: width + 135,
+              borderTop: '1px solid #BDBDBD',
+              borderBottom: '1px solid #BDBDBD',
+              ...headerRowStyles
             }}
           >
-            {this.renderHeaderRow()}
+            {this.renderAverageRow()}
           </div>
         </div>
 
@@ -265,7 +275,7 @@ class LearningMasteryGradebook extends React.Component {
           </div>
           <div
             className="mainWrapper"
-            style={{width: this.props.outcomes.length * 300, maxWidth: '880px', maxHeight: '660px'}}
+            style={{width, maxWidth: '880px', maxHeight: '660px'}}
             id="scores"
             onScroll={this.handleScrollCells}
           >
@@ -276,7 +286,7 @@ class LearningMasteryGradebook extends React.Component {
     )
   }
 
-  renderHeaderRow = () => {
+  renderAverageRow = () => {
     const {outcomes, sortAsc, sortField} = this.props
     return (
       <>
@@ -288,14 +298,16 @@ class LearningMasteryGradebook extends React.Component {
           </div>
         </div>
         <Flex direction="row">
-          <div className="sticky-header" id="averages-row" onScroll={this.handleAverageScroll}>
+          <div className="header-row" id="averages-row" onScroll={this.handleAverageScroll}>
             {outcomes.map(outcome => {
               let alignments
 
               if (this.state.expandedOutcomes[outcome.id]) {
-                alignments = this.outcomeAlignments(outcome).map(a => (
-                  <Flex.Item size="100px">
-                    {this.props.alignments.find(al => al.id == a)?.name}
+                alignments = this.outcomeAlignments({...outcome}).map(a => (
+                  <Flex.Item size="200px">
+                    <div className="cell assignment-name">
+                      {this.props.alignments.find(al => al.id == a)?.name}
+                    </div>
                   </Flex.Item>
                 ))
               }

@@ -28,7 +28,7 @@ a#accessibility_warning {
   box-sizing: border-box;
   display: inline-block;
   height: 18px;
-  float: left;
+  float: direction(left);
   min-height: 18px;
   padding: 0;
   width: 18px;
@@ -48,11 +48,10 @@ a#accessibility_warning {
 }
 
 #stuck-header {
-  border-left: 1px solid #BDBDBD;
   border-top: 1px solid #BDBDBD;
 }
 
-.sticky-header {
+.header-row {
   display: flex;
   width: 100%;
   padding-bottom: 40px;
